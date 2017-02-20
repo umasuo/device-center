@@ -41,12 +41,12 @@ apply plugin: 'docker'
 group = 'umasuo'
 
 jar {
-    baseName = 'file-service'
-    version =  '0.1.1'
+    baseName = 'device-service'
+    version =  '0.0.1'
 }
 
 // build docker image task
-apply from: '../docker_build.gradle'
+//apply from: '../docker_build.gradle'
 
 dependencies {
     // spring
