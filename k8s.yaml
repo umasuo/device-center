@@ -1,0 +1,47 @@
+kind: List
+apiVersion: v1
+items:
+- kind: Deployment
+  apiVersion: extensions/v1beta1
+  metadata:
+    name: device-info
+  spec:
+    replicas: 1
+    template:
+      metadata:
+        labels:
+          name: device-info
+      spec:
+        containers:
+        - name: device-info
+          image: umasuo/device-info:0.0.1
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 80
+          env:
+          - name: server_port
+            value: "80"
+          - name: spring_datasource_url
+            value: jdbc:postgresql://pg-data/device_info
+          - name: spring_cloud_config_uri
+            value: http://umasuo-config
+          - name: jwt_secret
+            valueFrom:
+              secretKeyRef:
+              name: umasuo-secret
+              key: jwt.secret
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: device-info
+    labels:
+      name: device-info
+  spec:
+    type: NodePort
+    ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30004
+    selector:
+      name: device-info
+
