@@ -1,4 +1,4 @@
-package com.umasuo.device.info;
+package com.umasuo.device.center;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
