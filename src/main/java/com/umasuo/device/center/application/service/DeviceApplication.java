@@ -7,6 +7,7 @@ import com.umasuo.device.center.domain.model.Device;
 import com.umasuo.device.center.domain.service.DeviceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ public class DeviceApplication {
   /**
    * device service.
    */
+  @Autowired
   private transient DeviceService deviceService;
 
   /**

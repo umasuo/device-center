@@ -29,6 +29,7 @@ public class DeviceMapper {
     deviceView.setVersion(device.getVersion());
     deviceView.setCustomizedId(device.getCustomizedId());
     deviceView.setDeviceDefineId(device.getDeviceDefineId());
+    deviceView.setOwnerId(device.getOwnerId());
     deviceView.setDeveloperId(device.getDeveloperId());
 
     return deviceView;

@@ -1,6 +1,21 @@
 server:
   port: 8082
 
+
 spring:
   application:
-    name: device-info
+    name: device-center
+  datasource:
+    url: jdbc:postgresql://localhost:5432/device_center
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: com.umasuo.database.dialect.JSONBPostgreSQLDialect
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  secret: QWERTYUIOPASDFGHJKLZXCVBNM
+  expires: 72000

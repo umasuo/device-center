@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +49,7 @@ public class DeviceController {
    * @param id String device id
    * @return DeviceView
    */
+  @GetMapping(Router.DEVICE_CENTER_WITH_ID)
   public DeviceView getDevice(@PathVariable String id) {
     logger.info("Enter. deviceId: {}.", id);
 
@@ -64,6 +66,7 @@ public class DeviceController {
    * @param developerId String in header
    * @return list of device view
    */
+  @GetMapping(Router.DEVICE_CENTER_ROOT)
   public List<DeviceView> getAllDeviceByUser(@RequestParam String userId,
                                              @RequestHeader String developerId) {
     logger.info("Enter. userId: {}, developerId: {}.", userId, developerId);
