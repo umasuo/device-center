@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,4 +38,15 @@ public class DeviceController {
     return view;
   }
 
+  /**
+   * get device by device id.
+   *
+   * @param id String device id
+   * @return DeviceView
+   */
+  public DeviceView getDevice(@PathVariable String id) {
+    logger.info("Enter. deviceId: {}.", id);
+
+    return null;
+  }
 }

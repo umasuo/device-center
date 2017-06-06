@@ -44,9 +44,7 @@ public class DeviceView implements Serializable {
    */
   private String customizedId;
 
-  private String userId;
-
-  private ZonedDateTime bindTime;
+  private String ownerId;
 
   private String developerId;
 }

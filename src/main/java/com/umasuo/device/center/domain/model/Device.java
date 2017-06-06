@@ -1,6 +1,5 @@
 package com.umasuo.device.center.domain.model;
 
-import com.umasuo.device.center.infrastructure.enums.DeviceStatus;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
@@ -53,15 +52,22 @@ public class Device {
   private Integer version;
 
   /**
-   * 企业自定义的设备Id，例如出产时指定一个ID.
+   * 企业自定义的设备Id，例如出产时指定一个ID，此ID应在一个developer下唯一.
    */
   private String customizedId;
 
   /**
-   * device definition id.
+   * 任何接入云平台的设备，都属于一个事先定义好的设备类型.
    */
   private String deviceDefineId;
 
+  /**
+   * 开发者ID，任何接入云平台的设备，都属于一个固定的开发者.
+   */
   private String developerId;
 
+  /**
+   * 设备拥有者的ID，这里是userId，而不是developerID，如果没有指定，那么这台设备的拥有者则属于开发者本身.
+   */
+  private String ownerId;
 }

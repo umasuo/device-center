@@ -2,11 +2,8 @@ package com.umasuo.device.center.application.service;
 
 import com.umasuo.device.center.application.dto.DeviceDraft;
 import com.umasuo.device.center.application.dto.DeviceView;
-import com.umasuo.device.center.application.dto.mapper.DeviceBindingMapper;
 import com.umasuo.device.center.application.dto.mapper.DeviceMapper;
 import com.umasuo.device.center.domain.model.Device;
-import com.umasuo.device.center.domain.model.DeviceBinding;
-import com.umasuo.device.center.domain.service.DeviceBindingService;
 import com.umasuo.device.center.domain.service.DeviceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +24,6 @@ public class DeviceApplication {
   private transient DeviceService deviceService;
 
   /**
-   * Device binding service.
-   */
-  private transient DeviceBindingService deviceBindingService;
-
-  /**
    * add new device to the system.
    *
    * @param draft draft
@@ -43,17 +35,12 @@ public class DeviceApplication {
     Device device = DeviceMapper.toModel(draft);
     Device savedDevice = deviceService.save(device);
 
-    DeviceBinding deviceBinding = DeviceBindingMapper.toModel(draft);
-    if (deviceBinding != null) {
-      deviceBinding.setDeviceId(savedDevice.getId());
-      deviceBindingService.save(deviceBinding);
-    }
-
-    DeviceView view = DeviceMapper.toView(savedDevice, deviceBinding);
+    DeviceView view = DeviceMapper.toView(savedDevice);
 
     logger.debug("Exit. deviceView: {}.", view);
     return null;
   }
+
 
   /**
    * get one device by device id and user id.
@@ -66,8 +53,7 @@ public class DeviceApplication {
     logger.debug("Enter. deviceId: {}, userId: {}.", deviceId, userId);
 
     Device device = deviceService.get(deviceId);
-    DeviceBinding deviceBinding = deviceBindingService.get(deviceId, userId);
-    DeviceView view = DeviceMapper.toView(device, deviceBinding);
+    DeviceView view = DeviceMapper.toView(device);
 
     logger.debug("Exit. deviceView: {}.", view);
     return view;
