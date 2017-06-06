@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by umasuo on 17/6/5.
  */
@@ -55,6 +57,47 @@ public class DeviceService {
     logger.debug("Exit. device: {}.", id);
     return device;
   }
+
+  /**
+   * 获取用户在某个开发者下的所有设备.
+   *
+   * @param userId      userID
+   * @param developerId 开发者ID
+   * @return list of device
+   */
+  public List<Device> getByUserAndDeveloper(String userId, String developerId) {
+    logger.debug("Enter. userId: {}, developerId: {}.", userId, developerId);
+
+    Device device = new Device();
+    device.setOwnerId(userId);
+    device.setDeveloperId(developerId);
+    Example<Device> example = Example.of(device);
+    List<Device> devices = deviceRepository.findAll(example);
+
+    logger.debug("Enter. deviceSize: {}.", devices.size());
+    logger.debug("devices: {}.", devices);
+    return devices;
+  }
+
+  /**
+   * 获取某种类型的设备的列表.
+   * TODO 这个应该分页，否则会过多而死.
+   *
+   * @param deviceDefineId
+   * @return list of device
+   */
+  public List<Device> getByDeviceDefineId(String deviceDefineId) {
+    logger.debug("Enter. deviceDefineId: {}.", deviceDefineId);
+
+    Device device = new Device();
+    device.setDeviceDefineId(deviceDefineId);
+    Example<Device> example = Example.of(device);
+    List<Device> devices = deviceRepository.findAll(example);
+
+    logger.debug("Exit. count: {}.", devices);
+    return devices;
+  }
+
 
   /**
    * count device for a special device define.

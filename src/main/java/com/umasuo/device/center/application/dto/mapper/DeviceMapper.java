@@ -4,6 +4,9 @@ import com.umasuo.device.center.application.dto.DeviceDraft;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.domain.model.Device;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by umasuo on 17/6/5.
  */
@@ -29,5 +32,13 @@ public class DeviceMapper {
     deviceView.setDeveloperId(device.getDeveloperId());
 
     return deviceView;
+  }
+
+  public static List<DeviceView> toView(List<Device> devices) {
+    List<DeviceView> views = new ArrayList<>();
+    devices.stream().forEach(
+        device -> views.add(toView(device))
+    );
+    return views;
   }
 }

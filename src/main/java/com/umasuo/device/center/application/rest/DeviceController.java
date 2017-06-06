@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -47,6 +51,26 @@ public class DeviceController {
   public DeviceView getDevice(@PathVariable String id) {
     logger.info("Enter. deviceId: {}.", id);
 
-    return null;
+    DeviceView view = deviceApplication.getByDeviceId(id);
+
+    logger.info("Exit. deviceView: {}.", view);
+    return view;
+  }
+
+  /**
+   * 获取用户在某个开啊这下的所有设备.
+   *
+   * @param userId      String
+   * @param developerId String in header
+   * @return list of device view
+   */
+  public List<DeviceView> getAllDeviceByUser(@RequestParam String userId,
+                                             @RequestHeader String developerId) {
+    logger.info("Enter. userId: {}, developerId: {}.", userId, developerId);
+
+    List<DeviceView> views = deviceApplication.getByUserAndDeveloper(userId, developerId);
+
+    logger.info("Exit. views: {}.", views);
+    return views;
   }
 }

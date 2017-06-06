@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created by umasuo on 17/6/5.
  */
@@ -38,24 +40,53 @@ public class DeviceApplication {
     DeviceView view = DeviceMapper.toView(savedDevice);
 
     logger.debug("Exit. deviceView: {}.", view);
-    return null;
+    return view;
   }
 
-
   /**
-   * get one device by device id and user id.
+   * get one device by device id.
    *
-   * @param deviceId
-   * @param userId
-   * @return
+   * @param deviceId String
+   * @return DeviceView
    */
-  public DeviceView getOneDeviceByUser(String deviceId, String userId) {
-    logger.debug("Enter. deviceId: {}, userId: {}.", deviceId, userId);
+  public DeviceView getByDeviceId(String deviceId) {
+    logger.debug("Enter. deviceId: {}.", deviceId);
 
     Device device = deviceService.get(deviceId);
     DeviceView view = DeviceMapper.toView(device);
 
     logger.debug("Exit. deviceView: {}.", view);
     return view;
+  }
+
+  /**
+   * 获取一个用户在某个开发者下的所有设备。
+   *
+   * @return 设备列表
+   */
+  public List<DeviceView> getByUserAndDeveloper(String userId, String developerId) {
+    logger.debug("Enter. userId: {}, developerId: {}.", userId, developerId);
+
+    List<Device> devices = deviceService.getByUserAndDeveloper(userId, developerId);
+    List<DeviceView> views = DeviceMapper.toView(devices);
+
+    logger.debug("Exit. viewSize: {}.", views.size());
+    logger.trace("DeviceView: {}.", views);
+    return views;
+  }
+
+  /**
+   * 获取某种设备的统计数量
+   *
+   * @param deviceDefinitionId String
+   * @return long
+   */
+  public long getDeviceCount(String deviceDefinitionId) {
+    logger.debug("Enter. deviceDefinitionId: {}.", deviceDefinitionId);
+
+    long count = deviceService.countByDeviceDefine(deviceDefinitionId);
+
+    logger.debug("Exit. count: {}.", count);
+    return count;
   }
 }
