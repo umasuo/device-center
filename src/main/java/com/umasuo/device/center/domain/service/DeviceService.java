@@ -116,4 +116,14 @@ public class DeviceService {
     logger.debug("Exit. count: {}.", count);
     return count;
   }
+
+  /**
+   * 统计device的数据.
+   *
+   * @param developerId
+   * @return
+   */
+  public long countDevice(String developerId, String deviceDefinitionId, long start, long end) {
+    return 0;
+  }
 }

@@ -66,7 +66,7 @@ public class DeviceController {
    * @param developerId String in header
    * @return list of device view
    */
-  @GetMapping(Router.DEVICE_CENTER_ROOT)
+  @GetMapping(value = Router.DEVICE_CENTER_ROOT, params = {"userId"})
   public List<DeviceView> getAllDeviceByUser(@RequestParam String userId,
                                              @RequestHeader String developerId) {
     logger.info("Enter. userId: {}, developerId: {}.", userId, developerId);
@@ -75,5 +75,20 @@ public class DeviceController {
 
     logger.info("Exit. views: {}.", views);
     return views;
+  }
+
+  /**
+   * 统计开发者的设备数, 可以根据时间区域选择.
+   * 按天统计.
+   *
+   * @param developerId 开发者ID
+   * @return 设备统计列表
+   */
+  @GetMapping(Router.DEVICE_CENTER_ROOT)
+  public Long countDevice(@RequestHeader String developerId,
+                          @RequestParam long start,
+                          @RequestParam long ends,
+                          @RequestParam String timeZone) {
+    return null;
   }
 }
