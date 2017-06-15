@@ -4,6 +4,7 @@ import com.umasuo.device.center.application.dto.DeviceDraft;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.application.service.DeviceApplication;
 import com.umasuo.device.center.infrastructure.Router;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,12 @@ public class DeviceController {
   private transient DeviceApplication deviceApplication;
 
 
+  /**
+   * Add device device view.
+   *
+   * @param draft the draft
+   * @return the device view
+   */
   @PostMapping(Router.DEVICE_CENTER_ROOT)
   public DeviceView addDevice(@RequestBody @Valid DeviceDraft draft) {
     logger.info("Enter. deviceDraft: {}.", draft);
@@ -47,7 +54,7 @@ public class DeviceController {
    * get device by device id.
    *
    * @param id String device id
-   * @return DeviceView
+   * @return DeviceView device
    */
   @GetMapping(Router.DEVICE_CENTER_WITH_ID)
   public DeviceView getDevice(@PathVariable String id) {
@@ -62,7 +69,7 @@ public class DeviceController {
   /**
    * 获取用户在某个开啊这下的所有设备.
    *
-   * @param userId      String
+   * @param userId String
    * @param developerId String in header
    * @return list of device view
    */
@@ -75,6 +82,29 @@ public class DeviceController {
 
     logger.info("Exit. views: {}.", views);
     return views;
+  }
+
+
+  /**
+   * Gets device by definition.
+   *
+   * @param userId the user id
+   * @param deviceDefinitionId the device definition id
+   * @param developerId the developer id
+   * @return the device by definition
+   */
+  @GetMapping(value = Router.DEVICE_CENTER_ROOT, params = {"userId", "deviceDefinitionId"})
+  public DeviceView getDeviceByDefinition(@RequestParam String userId,
+      @RequestParam String deviceDefinitionId, @RequestHeader String developerId) {
+    logger.info("Enter. userId: {}, developerId: {}, deviceDefinitionId: {}.",
+        userId, developerId, deviceDefinitionId);
+
+    DeviceView device = deviceApplication
+        .getByUserAndDefinition(userId, developerId, deviceDefinitionId);
+
+    logger.info("Exit. device: {}.", device);
+
+    return device;
   }
 
   /**

@@ -1,5 +1,7 @@
 package com.umasuo.device.center.domain.service;
 
+import com.umasuo.device.center.application.dto.DeviceView;
+import com.umasuo.device.center.application.dto.mapper.DeviceMapper;
 import com.umasuo.device.center.domain.model.Device;
 import com.umasuo.device.center.infrastructure.repository.DeviceRepository;
 import com.umasuo.exception.NotExistException;
@@ -125,5 +127,32 @@ public class DeviceService {
    */
   public long countDevice(String developerId, String deviceDefinitionId, long start, long end) {
     return 0;
+  }
+
+  /**
+   * Get device by user and device definition.
+   *
+   * @param userId the user id
+   * @param developerId the developer id
+   * @param deviceDefinitionId the device definition id
+   * @return Device
+   */
+  public Device getByUserAndDefinition(String userId, String developerId,
+      String deviceDefinitionId) {
+    logger.debug("Enter. userId: {}, developerId: {}, deviceDefinitionId: {}.", userId, developerId,
+        deviceDefinitionId);
+
+    Device sample = new Device();
+    sample.setDeviceDefineId(deviceDefinitionId);
+    sample.setOwnerId(userId);
+    sample.setDeveloperId(developerId);
+
+    Example<Device> example = Example.of(sample);
+
+    Device device = deviceRepository.findOne(example);
+
+    logger.debug("Exit. device: {}.", device);
+
+    return device;
   }
 }
