@@ -4,6 +4,7 @@ jdk: oraclejdk8
 services:
   - docker
 script:
+  - gradle wrapper
   - ./gradlew clean
   - ./gradlew build
 
