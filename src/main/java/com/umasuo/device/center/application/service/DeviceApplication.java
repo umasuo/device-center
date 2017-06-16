@@ -125,47 +125,4 @@ public class DeviceApplication {
 
     return result;
   }
-
-
-  /**
-   * Gets report by time.
-   *
-   * @param startTime the start time
-   * @param endTime the end time
-   * @return the report by time
-   */
-  public List<DeviceReportView> getPeriodReport(long startTime, long endTime) {
-    logger.debug("Enter. startTime: {}, endTime: {}.", startTime, endTime);
-
-    TimeValidator.validate(startTime, endTime);
-
-    List<HashMap> totalReport = deviceService.getAllReport();
-
-    List<HashMap> registerReport = deviceService.getRegisteredReport(startTime, endTime);
-
-    List<DeviceReportView> result = ReportUtils.mergeReport(totalReport, registerReport);
-
-    return result;
-  }
-
-  /**
-   * Gets report by time.
-   *
-   * @param startTime the start time
-   * @param developerId the developer id
-   * @return the report by time
-   */
-  public List<DeviceReportView> getDeveloperReportByTime(long startTime, String developerId) {
-    logger.debug("Enter. startTime: {}, developerId: {}.", startTime, developerId);
-
-    TimeValidator.validate(startTime);
-
-    List<HashMap> totalReport = deviceService.getDeveloperAllReport(developerId);
-
-    List<HashMap> registerReport = deviceService.getDeveloperRegisteredReport(developerId, startTime);
-
-    List<DeviceReportView> result = ReportUtils.mergeReport(totalReport, registerReport);
-
-    return result;
-  }
 }

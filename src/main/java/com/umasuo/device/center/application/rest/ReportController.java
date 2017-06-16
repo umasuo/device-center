@@ -1,7 +1,7 @@
 package com.umasuo.device.center.application.rest;
 
 import com.umasuo.device.center.application.dto.DeviceReportView;
-import com.umasuo.device.center.application.service.DeviceApplication;
+import com.umasuo.device.center.application.service.ReportApplication;
 import com.umasuo.device.center.infrastructure.Router;
 
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class ReportController {
   private static final Logger LOG = LoggerFactory.getLogger(ReportController.class);
 
   @Autowired
-  private transient DeviceApplication deviceApplication;
+  private transient ReportApplication reportApplication;
 
   /**
    * Gets report by time.
@@ -40,7 +40,7 @@ public class ReportController {
       @RequestParam("endTime") long endTime) {
     LOG.info("Enter. startTime: {}, endTime: {}.", startTime, endTime);
 
-    List<DeviceReportView> reports = deviceApplication.getPeriodReport(startTime, endTime);
+    List<DeviceReportView> reports = reportApplication.getPeriodReport(startTime, endTime);
 
     LOG.info("Exit. report size: {}.", reports.size());
 
@@ -59,7 +59,7 @@ public class ReportController {
       @RequestParam("startTime") long startTime) {
     LOG.info("Enter. developerId: {}, startTime: {}.", developerId, startTime);
 
-    List<DeviceReportView> reports = deviceApplication
+    List<DeviceReportView> reports = reportApplication
         .getDeveloperReportByTime(startTime, developerId);
 
     LOG.info("Exit. report size: {}.", reports.size());
