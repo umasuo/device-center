@@ -23,15 +23,17 @@ public class DeviceService {
    */
   private final static Logger logger = LoggerFactory.getLogger(DeviceService.class);
 
+  /**
+   * The DeviceRepository.
+   */
   @Autowired
   private transient DeviceRepository deviceRepository;
-
 
   /**
    * save a device.
    *
-   * @param sample
-   * @return
+   * @param sample the sample
+   * @return device device
    */
   public Device save(Device sample) {
     logger.debug("Enter. sample: {}.", sample);
@@ -45,8 +47,8 @@ public class DeviceService {
   /**
    * Get Device by device id.
    *
-   * @param id
-   * @return
+   * @param id the id
+   * @return device device
    */
   public Device get(String id) {
     logger.debug("Enter. id: {}.", id);
@@ -62,7 +64,7 @@ public class DeviceService {
   /**
    * 获取用户在某个开发者下的所有设备.
    *
-   * @param userId      userID
+   * @param userId userID
    * @param developerId 开发者ID
    * @return list of device
    */
@@ -84,7 +86,7 @@ public class DeviceService {
    * 获取某种类型的设备的列表.
    * TODO 这个应该分页，否则会过多而死.
    *
-   * @param deviceDefineId
+   * @param deviceDefineId the device define id
    * @return list of device
    */
   public List<Device> getByDeviceDefineId(String deviceDefineId) {
@@ -121,8 +123,11 @@ public class DeviceService {
   /**
    * 统计device的数据.
    *
-   * @param developerId
-   * @return
+   * @param developerId the developer id
+   * @param deviceDefinitionId the device definition id
+   * @param start the start
+   * @param end the end
+   * @return long long
    */
   public long countDevice(String developerId, String deviceDefinitionId, long start, long end) {
     return 0;
@@ -134,7 +139,7 @@ public class DeviceService {
    * @param userId the user id
    * @param developerId the developer id
    * @param deviceDefinitionId the device definition id
-   * @return Device
+   * @return Device by user and definition
    */
   public Device getByUserAndDefinition(String userId, String developerId,
       String deviceDefinitionId) {
@@ -155,20 +160,72 @@ public class DeviceService {
     return device;
   }
 
+
+  /**
+   * Gets all report.
+   *
+   * @return the all report
+   */
   public List<HashMap> getAllReport() {
-    return deviceRepository.getReport();
+    logger.debug("Enter.");
+
+    List<HashMap> result = deviceRepository.getReport();
+
+    logger.debug("Exit. result size: {}.", result.size());
+
+    return result;
   }
 
+
+  /**
+   * Gets registered report.
+   *
+   * @param startTime the start time
+   * @param endTime the end time
+   * @return the registered report
+   */
   public List<HashMap> getRegisteredReport(long startTime, long endTime) {
-    return deviceRepository.getRegisterReport(startTime, endTime);
+    logger.debug("Enter.");
+
+    List<HashMap> result = deviceRepository.getRegisterReport(startTime, endTime);
+
+    logger.debug("Exit. result size: {}.", result.size());
+
+    return result;
   }
 
+  /**
+   * Gets developer all report.
+   *
+   * @param developerId the developer id
+   * @return the developer all report
+   */
   public List<HashMap> getDeveloperAllReport(String developerId) {
-    return deviceRepository.getDeveloperReport(developerId);
+    logger.debug("Enter. developerId: {}.", developerId);
+
+    List<HashMap> result = deviceRepository.getDeveloperReport(developerId);
+
+    logger.debug("Exit. result size: {}.", result.size());
+
+    return result;
   }
 
+
+  /**
+   * Gets developer registered report.
+   *
+   * @param developerId the developer id
+   * @param startTime the start time
+   * @return the developer registered report
+   */
   public List<HashMap> getDeveloperRegisteredReport(String developerId, long startTime) {
-    return deviceRepository.getDeveloperRegisterReport(developerId, startTime);
+    logger.debug("Enter. developerId: {}, startTime: {}.", developerId, startTime);
+
+    List<HashMap> result = deviceRepository.getDeveloperRegisterReport(developerId, startTime);
+
+    logger.debug("Exit. result size: {}.", result.size());
+
+    return result;
   }
 
 }
