@@ -1,6 +1,5 @@
 package com.umasuo.device.center.application.service;
 
-import com.google.common.collect.Lists;
 import com.umasuo.device.center.application.dto.DeviceDraft;
 import com.umasuo.device.center.application.dto.DeviceReportView;
 import com.umasuo.device.center.application.dto.DeviceView;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Created by umasuo on 17/6/5.
@@ -141,9 +139,30 @@ public class DeviceApplication {
 
     TimeValidator.validate(startTime, endTime);
 
-    List<HashMap> totalReport = deviceService.getDeviceReport();
+    List<HashMap> totalReport = deviceService.getAllReport();
 
-    List<HashMap> registerReport = deviceService.getRegisteredDeviceReport(startTime, endTime);
+    List<HashMap> registerReport = deviceService.getRegisteredReport(startTime, endTime);
+
+    List<DeviceReportView> result = ReportUtils.mergeReport(totalReport, registerReport);
+
+    return result;
+  }
+
+  /**
+   * Gets report by time.
+   *
+   * @param startTime the start time
+   * @param developerId the developer id
+   * @return the report by time
+   */
+  public List<DeviceReportView> getDeveloperReportByTime(long startTime, String developerId) {
+    logger.debug("Enter. startTime: {}, developerId: {}.", startTime, developerId);
+
+    TimeValidator.validate(startTime);
+
+    List<HashMap> totalReport = deviceService.getDeveloperAllReport(developerId);
+
+    List<HashMap> registerReport = deviceService.getDeveloperRegisteredReport(developerId, startTime);
 
     List<DeviceReportView> result = ReportUtils.mergeReport(totalReport, registerReport);
 

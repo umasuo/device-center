@@ -52,6 +52,17 @@ public final class TimeValidator {
       LOG.debug("Can not get more than 1 day ago report");
       throw new ParametersException("Can not get more than 1 day ago report");
     }
+  }
 
+  public static void validate(long startTime) {
+    ZonedDateTime start = Instant.ofEpochMilli(startTime).atZone(ZoneOffset.UTC);
+
+    ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
+
+    long daysRange = ChronoUnit.DAYS.between(now, start);
+    if (daysRange > 1 || daysRange < -1) {
+      LOG.debug("Can not get more than 1 day ago report");
+      throw new ParametersException("Can not get more than 1 day ago report");
+    }
   }
 }

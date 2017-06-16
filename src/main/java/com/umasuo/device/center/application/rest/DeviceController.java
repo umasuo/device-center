@@ -1,6 +1,5 @@
 package com.umasuo.device.center.application.rest;
 
-import com.google.common.collect.Lists;
 import com.umasuo.device.center.application.dto.DeviceDraft;
 import com.umasuo.device.center.application.dto.DeviceReportView;
 import com.umasuo.device.center.application.dto.DeviceView;
@@ -140,6 +139,25 @@ public class DeviceController {
     logger.info("Enter. startTime: {}, endTime: {}.", startTime, endTime);
 
     List<DeviceReportView> reports = deviceApplication.getReportByTime(startTime, endTime);
+
+    logger.info("Exit. report size: {}.", reports.size());
+
+    return reports;
+  }
+
+  /**
+   * Gets report by time.
+   *
+   * @param developerId the developer id
+   * @param startTime the start time
+   * @return the report by time
+   */
+  @GetMapping(value = Router.DEVICE_CENTER_ROOT, params = {"startTime"})
+  public List<DeviceReportView> getReportByTime(@RequestHeader String developerId,
+      @RequestParam("startTime") long startTime) {
+    logger.info("Enter. developerId: {}, startTime: {}.", developerId, startTime);
+
+    List<DeviceReportView> reports = deviceApplication.getDeveloperReportByTime(startTime, developerId);
 
     logger.info("Exit. report size: {}.", reports.size());
 

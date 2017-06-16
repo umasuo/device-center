@@ -58,6 +58,9 @@ public final class ReportUtils {
     reportView.setDeviceDefinitionId(map.get("definitionId").toString());
     reportView.setTotalNumber(Integer.valueOf(map.get("totalCount").toString()));
 
+    // TODO: 17/6/16 
+    reportView.setOnlineNumber(0);
+
     result.add(reportView);
   }
 }

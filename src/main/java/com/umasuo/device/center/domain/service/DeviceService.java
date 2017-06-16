@@ -1,8 +1,5 @@
 package com.umasuo.device.center.domain.service;
 
-import com.umasuo.device.center.application.dto.DeviceReportView;
-import com.umasuo.device.center.application.dto.DeviceView;
-import com.umasuo.device.center.application.dto.mapper.DeviceMapper;
 import com.umasuo.device.center.domain.model.Device;
 import com.umasuo.device.center.infrastructure.repository.DeviceRepository;
 import com.umasuo.exception.NotExistException;
@@ -158,11 +155,20 @@ public class DeviceService {
     return device;
   }
 
-  public List<HashMap> getDeviceReport() {
-    return deviceRepository.getDeviceReport();
+  public List<HashMap> getAllReport() {
+    return deviceRepository.getReport();
   }
 
-  public List<HashMap> getRegisteredDeviceReport(long startTime, long endTime) {
-    return deviceRepository.getRegisterDeviceReport(startTime, endTime);
+  public List<HashMap> getRegisteredReport(long startTime, long endTime) {
+    return deviceRepository.getRegisterReport(startTime, endTime);
   }
+
+  public List<HashMap> getDeveloperAllReport(String developerId) {
+    return deviceRepository.getDeveloperReport(developerId);
+  }
+
+  public List<HashMap> getDeveloperRegisteredReport(String developerId, long startTime) {
+    return deviceRepository.getDeveloperRegisterReport(developerId, startTime);
+  }
+
 }
