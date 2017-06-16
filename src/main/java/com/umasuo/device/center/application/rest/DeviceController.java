@@ -1,6 +1,8 @@
 package com.umasuo.device.center.application.rest;
 
+import com.google.common.collect.Lists;
 import com.umasuo.device.center.application.dto.DeviceDraft;
+import com.umasuo.device.center.application.dto.DeviceReportView;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.application.service.DeviceApplication;
 import com.umasuo.device.center.infrastructure.Router;
@@ -112,7 +114,10 @@ public class DeviceController {
    * 按天统计.
    *
    * @param developerId 开发者ID
-   * @return 设备统计列表
+   * @param start the start
+   * @param ends the ends
+   * @param timeZone the time zone
+   * @return 设备统计列表 long
    */
   @GetMapping(Router.DEVICE_CENTER_ROOT)
   public Long countDevice(@RequestHeader String developerId,
@@ -120,5 +125,24 @@ public class DeviceController {
                           @RequestParam long ends,
                           @RequestParam String timeZone) {
     return null;
+  }
+
+  /**
+   * Gets report by time.
+   *
+   * @param startTime the start time
+   * @param endTime the end time
+   * @return the report by time
+   */
+  @GetMapping(value = Router.DEVICE_CENTER_ROOT, params = {"startTime", "endTime"})
+  public List<DeviceReportView> getReportByTime(@RequestParam("startTime") long startTime,
+      @RequestParam("endTime") long endTime) {
+    logger.info("Enter. startTime: {}, endTime: {}.", startTime, endTime);
+
+    List<DeviceReportView> reports = deviceApplication.getReportByTime(startTime, endTime);
+
+    logger.info("Exit. report size: {}.", reports.size());
+
+    return reports;
   }
 }

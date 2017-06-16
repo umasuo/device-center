@@ -1,5 +1,6 @@
 package com.umasuo.device.center.domain.service;
 
+import com.umasuo.device.center.application.dto.DeviceReportView;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.application.dto.mapper.DeviceMapper;
 import com.umasuo.device.center.domain.model.Device;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -154,5 +156,13 @@ public class DeviceService {
     logger.debug("Exit. device: {}.", device);
 
     return device;
+  }
+
+  public List<HashMap> getDeviceReport() {
+    return deviceRepository.getDeviceReport();
+  }
+
+  public List<HashMap> getRegisteredDeviceReport(long startTime, long endTime) {
+    return deviceRepository.getRegisterDeviceReport(startTime, endTime);
   }
 }

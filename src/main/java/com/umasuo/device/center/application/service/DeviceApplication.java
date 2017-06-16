@@ -1,10 +1,14 @@
 package com.umasuo.device.center.application.service;
 
+import com.google.common.collect.Lists;
 import com.umasuo.device.center.application.dto.DeviceDraft;
+import com.umasuo.device.center.application.dto.DeviceReportView;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.application.dto.mapper.DeviceMapper;
 import com.umasuo.device.center.domain.model.Device;
 import com.umasuo.device.center.domain.service.DeviceService;
+import com.umasuo.device.center.infrastructure.TimeValidator;
+import com.umasuo.device.center.infrastructure.util.ReportUtils;
 import com.umasuo.exception.NotExistException;
 
 import org.slf4j.Logger;
@@ -13,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Created by umasuo on 17/6/5.
@@ -118,6 +124,28 @@ public class DeviceApplication {
     DeviceView result = DeviceMapper.toView(device);
 
     logger.debug("Exit. device: {}.", result);
+
+    return result;
+  }
+
+
+  /**
+   * Gets report by time.
+   *
+   * @param startTime the start time
+   * @param endTime the end time
+   * @return the report by time
+   */
+  public List<DeviceReportView> getReportByTime(long startTime, long endTime) {
+    logger.debug("Enter. startTime: {}, endTime: {}.", startTime, endTime);
+
+    TimeValidator.validate(startTime, endTime);
+
+    List<HashMap> totalReport = deviceService.getDeviceReport();
+
+    List<HashMap> registerReport = deviceService.getRegisteredDeviceReport(startTime, endTime);
+
+    List<DeviceReportView> result = ReportUtils.mergeReport(totalReport, registerReport);
 
     return result;
   }
