@@ -125,42 +125,4 @@ public class DeviceController {
                           @RequestParam String timeZone) {
     return null;
   }
-
-  /**
-   * Gets report by time.
-   *
-   * @param startTime the start time
-   * @param endTime the end time
-   * @return the report by time
-   */
-  @GetMapping(value = Router.DEVICE_CENTER_ROOT, params = {"startTime", "endTime"})
-  public List<DeviceReportView> getReportByTime(@RequestParam("startTime") long startTime,
-      @RequestParam("endTime") long endTime) {
-    logger.info("Enter. startTime: {}, endTime: {}.", startTime, endTime);
-
-    List<DeviceReportView> reports = deviceApplication.getReportByTime(startTime, endTime);
-
-    logger.info("Exit. report size: {}.", reports.size());
-
-    return reports;
-  }
-
-  /**
-   * Gets report by time.
-   *
-   * @param developerId the developer id
-   * @param startTime the start time
-   * @return the report by time
-   */
-  @GetMapping(value = Router.DEVICE_CENTER_ROOT, params = {"startTime"})
-  public List<DeviceReportView> getReportByTime(@RequestHeader String developerId,
-      @RequestParam("startTime") long startTime) {
-    logger.info("Enter. developerId: {}, startTime: {}.", developerId, startTime);
-
-    List<DeviceReportView> reports = deviceApplication.getDeveloperReportByTime(startTime, developerId);
-
-    logger.info("Exit. report size: {}.", reports.size());
-
-    return reports;
-  }
 }

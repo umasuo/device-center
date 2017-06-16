@@ -4,10 +4,16 @@ package com.umasuo.device.center.infrastructure;
  * Created by umasuo on 17/6/3.
  */
 public class Router {
+
   /**
    * authentication root.
    */
   public static final String DEVICE_CENTER_ROOT = "/devices";
+
+  /**
+   * The constant REPORT_ROOT.
+   */
+  public static final String REPORT_ROOT = DEVICE_CENTER_ROOT + "/reports";
 
   /**
    * device with id.

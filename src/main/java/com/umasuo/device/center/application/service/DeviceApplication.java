@@ -134,7 +134,7 @@ public class DeviceApplication {
    * @param endTime the end time
    * @return the report by time
    */
-  public List<DeviceReportView> getReportByTime(long startTime, long endTime) {
+  public List<DeviceReportView> getPeriodReport(long startTime, long endTime) {
     logger.debug("Enter. startTime: {}, endTime: {}.", startTime, endTime);
 
     TimeValidator.validate(startTime, endTime);
