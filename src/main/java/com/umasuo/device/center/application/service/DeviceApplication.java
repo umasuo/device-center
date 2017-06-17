@@ -1,13 +1,10 @@
 package com.umasuo.device.center.application.service;
 
 import com.umasuo.device.center.application.dto.DeviceDraft;
-import com.umasuo.device.center.application.dto.DeviceReportView;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.application.dto.mapper.DeviceMapper;
 import com.umasuo.device.center.domain.model.Device;
 import com.umasuo.device.center.domain.service.DeviceService;
-import com.umasuo.device.center.infrastructure.TimeValidator;
-import com.umasuo.device.center.infrastructure.util.ReportUtils;
 import com.umasuo.exception.NotExistException;
 
 import org.slf4j.Logger;
@@ -16,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**

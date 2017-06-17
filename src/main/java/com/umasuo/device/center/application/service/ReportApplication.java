@@ -2,7 +2,7 @@ package com.umasuo.device.center.application.service;
 
 import com.umasuo.device.center.application.dto.DeviceReportView;
 import com.umasuo.device.center.domain.service.DeviceService;
-import com.umasuo.device.center.infrastructure.TimeValidator;
+import com.umasuo.device.center.infrastructure.validator.TimeValidator;
 import com.umasuo.device.center.infrastructure.util.ReportUtils;
 
 import org.slf4j.Logger;
