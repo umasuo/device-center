@@ -1,7 +1,6 @@
 package com.umasuo.device.center.application.rest;
 
 import com.umasuo.device.center.application.dto.DeviceDraft;
-import com.umasuo.device.center.application.dto.DeviceReportView;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.application.service.DeviceApplication;
 import com.umasuo.device.center.infrastructure.Router;
@@ -42,10 +41,12 @@ public class DeviceController {
    * @return the device view
    */
   @PostMapping(Router.DEVICE_CENTER_ROOT)
-  public DeviceView addDevice(@RequestBody @Valid DeviceDraft draft) {
+  public DeviceView addDevice(@RequestBody @Valid DeviceDraft draft,
+      @RequestHeader(required = false) String userId,
+      @RequestHeader String developerId) {
     logger.info("Enter. deviceDraft: {}.", draft);
 
-    DeviceView view = deviceApplication.addDevice(draft);
+    DeviceView view = deviceApplication.addDevice(draft, developerId, userId);
 
     logger.info("Exit. deviceView: {}.", view);
     return view;
@@ -58,17 +59,19 @@ public class DeviceController {
    * @return DeviceView device
    */
   @GetMapping(Router.DEVICE_CENTER_WITH_ID)
-  public DeviceView getDevice(@PathVariable String id) {
+  public DeviceView getDevice(@PathVariable String id,
+      @RequestHeader(required = false) String userId,
+      @RequestHeader String developerId) {
     logger.info("Enter. deviceId: {}.", id);
 
-    DeviceView view = deviceApplication.getByDeviceId(id);
+    DeviceView view = deviceApplication.getByDeviceId(id, developerId, userId);
 
     logger.info("Exit. deviceView: {}.", view);
     return view;
   }
 
   /**
-   * 获取用户在某个开啊这下的所有设备.
+   * 获取用户在某个开发者下的所有设备.
    *
    * @param userId String
    * @param developerId String in header
@@ -84,7 +87,6 @@ public class DeviceController {
     logger.info("Exit. views: {}.", views);
     return views;
   }
-
 
   /**
    * Gets device by definition.

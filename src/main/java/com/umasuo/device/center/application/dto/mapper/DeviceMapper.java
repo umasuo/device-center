@@ -12,12 +12,12 @@ import java.util.List;
  */
 public class DeviceMapper {
 
-  public static Device toModel(DeviceDraft draft) {
+  public static Device toModel(DeviceDraft draft, String developerId, String userId) {
     Device device = new Device();
     device.setDeviceDefineId(draft.getDeviceDefineId());
     device.setCustomizedId(draft.getCustomizedId());
-    device.setDeveloperId(draft.getDeveloperId());
-    device.setOwnerId(draft.getOwnerId());
+    device.setDeveloperId(developerId);
+    device.setOwnerId(userId);
     return device;
   }
 

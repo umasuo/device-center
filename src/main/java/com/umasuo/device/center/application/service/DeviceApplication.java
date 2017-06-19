@@ -6,7 +6,9 @@ import com.umasuo.device.center.application.dto.mapper.DeviceMapper;
 import com.umasuo.device.center.domain.model.Device;
 import com.umasuo.device.center.domain.service.DeviceService;
 import com.umasuo.exception.NotExistException;
+import com.umasuo.exception.ParametersException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +38,9 @@ public class DeviceApplication {
    * @return device view
    */
   @Transactional
-  public DeviceView addDevice(DeviceDraft draft) {
+  public DeviceView addDevice(DeviceDraft draft, String developerId, String userId) {
     logger.debug("Enter. draft: {}.", draft);
-    Device device = DeviceMapper.toModel(draft);
+    Device device = DeviceMapper.toModel(draft, developerId, userId);
     Device savedDevice = deviceService.save(device);
 
     DeviceView view = DeviceMapper.toView(savedDevice);
@@ -53,10 +55,24 @@ public class DeviceApplication {
    * @param deviceId String
    * @return DeviceView by device id
    */
-  public DeviceView getByDeviceId(String deviceId) {
+  public DeviceView getByDeviceId(String deviceId, String developerId, String userId) {
     logger.debug("Enter. deviceId: {}.", deviceId);
 
     Device device = deviceService.get(deviceId);
+
+    if (! device.getDeveloperId().equals(developerId)) {
+      logger.debug("Device: {} is not belong to developer: {}.", deviceId, developerId);
+      throw new ParametersException("The device not belong to the developer: " + developerId + "," +
+          " deviceId: " + deviceId);
+    }
+
+    if (StringUtils.isNotBlank(userId) &&
+        !userId.equals(device.getOwnerId())) {
+      logger.debug("Device: {} is not belong to user: {}.", deviceId, userId);
+      throw new ParametersException("The device not belong to the user: " + userId + "," +
+          " deviceId: " + deviceId);
+    }
+
     DeviceView view = DeviceMapper.toView(device);
 
     logger.debug("Exit. deviceView: {}.", view);
