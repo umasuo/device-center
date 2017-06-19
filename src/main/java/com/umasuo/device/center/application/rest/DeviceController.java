@@ -107,22 +107,4 @@ public class DeviceController {
 
     return device;
   }
-
-  /**
-   * 统计开发者的设备数, 可以根据时间区域选择.
-   * 按天统计.
-   *
-   * @param developerId 开发者ID
-   * @param start the start
-   * @param ends the ends
-   * @param timeZone the time zone
-   * @return 设备统计列表 long
-   */
-  @GetMapping(Router.DEVICE_CENTER_ROOT)
-  public Long countDevice(@RequestHeader String developerId,
-                          @RequestParam long start,
-                          @RequestParam long ends,
-                          @RequestParam String timeZone) {
-    return null;
-  }
 }

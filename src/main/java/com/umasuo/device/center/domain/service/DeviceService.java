@@ -3,6 +3,7 @@ package com.umasuo.device.center.domain.service;
 import com.umasuo.device.center.domain.model.Device;
 import com.umasuo.device.center.infrastructure.repository.DeviceRepository;
 import com.umasuo.exception.NotExistException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,38 +100,6 @@ public class DeviceService {
 
     logger.debug("Exit. count: {}.", devices);
     return devices;
-  }
-
-
-  /**
-   * count device for a special device define.
-   *
-   * @param deviceDefineId device define id
-   * @return count result
-   */
-  public long countByDeviceDefine(String deviceDefineId) {
-    logger.debug("Enter. deviceDefineId: {}.", deviceDefineId);
-
-    Device device = new Device();
-    device.setDeviceDefineId(deviceDefineId);
-    Example<Device> example = Example.of(device);
-    long count = deviceRepository.count(example);
-
-    logger.debug("Exit. count: {}.", count);
-    return count;
-  }
-
-  /**
-   * 统计device的数据.
-   *
-   * @param developerId the developer id
-   * @param deviceDefinitionId the device definition id
-   * @param start the start
-   * @param end the end
-   * @return long long
-   */
-  public long countDevice(String developerId, String deviceDefinitionId, long start, long end) {
-    return 0;
   }
 
   /**

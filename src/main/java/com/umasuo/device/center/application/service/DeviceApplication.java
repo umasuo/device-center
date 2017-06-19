@@ -82,21 +82,6 @@ public class DeviceApplication {
   }
 
   /**
-   * 获取某种设备的统计数量
-   *
-   * @param deviceDefinitionId String
-   * @return long device count
-   */
-  public long getDeviceCount(String deviceDefinitionId) {
-    logger.debug("Enter. deviceDefinitionId: {}.", deviceDefinitionId);
-
-    long count = deviceService.countByDeviceDefine(deviceDefinitionId);
-
-    logger.debug("Exit. count: {}.", count);
-    return count;
-  }
-
-  /**
    * Gets by user and definition.
    *
    * @param userId the user id
