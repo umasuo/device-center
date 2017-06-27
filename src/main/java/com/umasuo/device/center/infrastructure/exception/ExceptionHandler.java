@@ -71,6 +71,10 @@ public class ExceptionHandler implements com.umasuo.exception.handler.ExceptionH
       body = ExceptionBody.of(ExceptionBody.EMAIL_OR_PASSWORD_ERROR_CODE, ExceptionBody
           .EMAIL_OR_PASSWORD_ERROR_MESSAGE);
     }
+    if (ex instanceof AlreadyBoundException) {
+      body = ExceptionBody.of(ExceptionBody.DEVICE_ALREADY_BOUND_CODE,
+          ExceptionBody.DEVICE_ALREADY_BOUND_MESSAGE);
+    }
     return body;
   }
 }

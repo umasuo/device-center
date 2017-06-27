@@ -59,10 +59,10 @@ public class TokenApplication {
   public String createToken(String userId) {
     LOG.debug("Enter. userId: {}.", userId);
 
-    String token = (String) redisTemplate.opsForValue().get(userId);
+    String key = USER_DEVICE_TOKEN_PREFIX + userId;
+    String token = (String) redisTemplate.opsForValue().get(key);
     if (StringUtils.isBlank(token)) {
       token = RandomStringUtils.randomAlphanumeric(TOKEN_LENGTH);
-      String key = USER_DEVICE_TOKEN_PREFIX + userId;
       redisTemplate.opsForValue().set(key, token, EXPIRE_TIME, TIME_UTIL);
     }
 

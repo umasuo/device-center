@@ -20,6 +20,9 @@ public class ExceptionBody {
   public static final int EMAIL_OR_PASSWORD_ERROR_CODE = 10003;
   public static final String EMAIL_OR_PASSWORD_ERROR_MESSAGE = "email or password not correct.";
 
+  public static final int DEVICE_ALREADY_BOUND_CODE = 10004;
+  public static final String DEVICE_ALREADY_BOUND_MESSAGE = "device already bound";
+
   /**
    * CODE.
    */
