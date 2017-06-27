@@ -4,8 +4,11 @@ import com.umasuo.device.center.application.dto.DeviceDraft;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.domain.model.Device;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by umasuo on 17/6/5.
@@ -15,7 +18,7 @@ public class DeviceMapper {
   public static Device toModel(DeviceDraft draft, String developerId, String userId) {
     Device device = new Device();
     device.setDeviceDefineId(draft.getDeviceDefineId());
-    device.setCustomizedId(draft.getCustomizedId());
+    device.setUnionId(draft.getUnionId());
     device.setDeveloperId(developerId);
     device.setOwnerId(userId);
     return device;
@@ -27,7 +30,7 @@ public class DeviceMapper {
     deviceView.setCreatedAt(device.getCreatedAt());
     deviceView.setLastModifiedAt(device.getLastModifiedAt());
     deviceView.setVersion(device.getVersion());
-    deviceView.setCustomizedId(device.getCustomizedId());
+    deviceView.setCustomizedId(device.getUnionId());
     deviceView.setDeviceDefineId(device.getDeviceDefineId());
     deviceView.setOwnerId(device.getOwnerId());
     deviceView.setDeveloperId(device.getDeveloperId());
@@ -41,5 +44,17 @@ public class DeviceMapper {
         device -> views.add(toView(device))
     );
     return views;
+  }
+
+  public static Device build(DeviceDraft draft, String userId, String developerId) {
+    Device device = new Device();
+
+    device.setDeveloperId(developerId);
+    device.setOwnerId(userId);
+    device.setUnionId(draft.getUnionId());
+    device.setPublicKey(RandomStringUtils.randomAlphanumeric(9));
+    device.setDeviceId(UUID.randomUUID().toString());
+
+    return device;
   }
 }

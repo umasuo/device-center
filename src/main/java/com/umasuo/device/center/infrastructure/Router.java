@@ -20,4 +20,10 @@ public class Router {
    */
   public static final String DEVICE_CENTER_WITH_ID = DEVICE_CENTER_ROOT + "/{id}";
 
+  /**
+   * Device token root.
+   */
+  public static final String DEVICE_TOKEN = DEVICE_CENTER_ROOT + "/token";
+
+  public static final String UNION_ROOT = DEVICE_CENTER_ROOT + "/union";
 }

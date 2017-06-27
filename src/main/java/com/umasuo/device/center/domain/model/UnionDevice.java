@@ -1,8 +1,9 @@
 package com.umasuo.device.center.domain.model;
 
-import com.umasuo.device.center.infrastructure.enums.DeviceStatus;
-
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -17,19 +18,19 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 /**
- * Created by umasuo on 17/6/3.
+ * Created by Davis on 17/6/27.
  */
 @Entity
-@Table(name = "device")
+@Table(name = "union_device")
 @Data
 @EntityListeners(AuditingEntityListener.class)
-public class Device {
+public class UnionDevice {
 
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")
-  @Column(name = "id")
-  private String id;
+  @Column(name = "union_id")
+  private String unionId;
 
   /**
    * The Created at.
@@ -52,30 +53,11 @@ public class Device {
   private Integer version;
 
   /**
-   * 从系统批量获取的ID，用于唯一标志该设备。
+   * The developer id.
    */
-  private String unionId;
-
-  /**
-   * 任何接入云平台的设备，都属于一个事先定义好的设备类型.
-   */
-  private String deviceDefineId;
-
-  /**
-   * 开发者ID，任何接入云平台的设备，都属于一个固定的开发者.
-   */
+  @Column(name = "developer_id")
   private String developerId;
 
-  /**
-   * 设备拥有者的ID，这里是userId，而不是developerID，如果没有指定，那么这台设备的拥有者则属于开发者本身.
-   */
-  private String ownerId;
-
-  private String secretKey;
-
-  private String publicKey;
-
-  private String deviceId;
-
-  private DeviceStatus status;
+  @Column(name = "product_Id")
+  private String productId;
 }

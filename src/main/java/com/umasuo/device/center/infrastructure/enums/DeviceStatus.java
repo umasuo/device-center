@@ -6,5 +6,4 @@ package com.umasuo.device.center.infrastructure.enums;
 public enum DeviceStatus {
   BIND,
   UNBIND
-
 }

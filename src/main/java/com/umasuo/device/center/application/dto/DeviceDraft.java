@@ -3,7 +3,6 @@ package com.umasuo.device.center.application.dto;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 
 import javax.validation.constraints.NotNull;
 
@@ -24,5 +23,9 @@ public class DeviceDraft implements Serializable {
   @NotNull
   private String deviceDefineId;
 
-  private String customizedId;
+  @NotNull
+  private String unionId;
+
+  @NotNull
+  private String token;
 }

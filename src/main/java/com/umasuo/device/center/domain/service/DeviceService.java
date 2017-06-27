@@ -1,6 +1,7 @@
 package com.umasuo.device.center.domain.service;
 
 import com.umasuo.device.center.domain.model.Device;
+import com.umasuo.device.center.infrastructure.enums.DeviceStatus;
 import com.umasuo.device.center.infrastructure.repository.DeviceRepository;
 import com.umasuo.exception.NotExistException;
 
@@ -197,4 +198,48 @@ public class DeviceService {
     return result;
   }
 
+  /**
+   * 检查设备是否已经被绑定。
+   *
+   * @param unionId union id
+   * @return
+   */
+  public boolean isDeviceBound(String unionId) {
+    logger.debug("Enter. unionId: {}.", unionId);
+
+    Device sample = new Device();
+    sample.setUnionId(unionId);
+    sample.setStatus(DeviceStatus.BIND);
+
+    Example<Device> example = Example.of(sample);
+
+    boolean result = deviceRepository.exists(example);
+
+    logger.debug("Exit. isDeviceBound? {}", result);
+
+    return result;
+  }
+
+  /**
+   * 根据用户id和设备id获取设备信息。
+   *
+   * @param userId
+   * @param unionId
+   * @return
+   */
+  public Device findByUserAndUnionId(String userId, String unionId) {
+    logger.debug("Enter. userId: {}, unionId: {}.", userId, unionId);
+
+    Device sample = new Device();
+    sample.setUnionId(unionId);
+    sample.setOwnerId(userId);
+
+    Example<Device> example = Example.of(sample);
+
+    Device result = deviceRepository.findOne(example);
+
+    logger.debug("Exit. device: {}.", result);
+
+    return result;
+  }
 }
