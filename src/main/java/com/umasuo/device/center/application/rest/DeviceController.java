@@ -4,7 +4,6 @@ import com.umasuo.device.center.application.dto.DeviceActivateResult;
 import com.umasuo.device.center.application.dto.DeviceDraft;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.application.service.DeviceApplication;
-import com.umasuo.device.center.application.service.TokenApplication;
 import com.umasuo.device.center.infrastructure.Router;
 
 import org.slf4j.Logger;
@@ -34,12 +33,6 @@ public class DeviceController {
 
   @Autowired
   private transient DeviceApplication deviceApplication;
-
-  /**
-   * The Token service.
-   */
-  @Autowired
-  private TokenApplication tokenApplication;
 
   /**
    * 激活设备。
@@ -117,22 +110,5 @@ public class DeviceController {
     logger.info("Exit. device: {}.", device);
 
     return device;
-  }
-
-  /**
-   * Create token string.
-   *
-   * @param userId the user id
-   * @return the string
-   */
-  @PostMapping(value = Router.DEVICE_TOKEN)
-  public String createToken(@RequestHeader("userId") String userId) {
-    logger.info("Enter. userId: {}.", userId);
-
-    String token = tokenApplication.createToken(userId);
-
-    logger.info("Exit. token: {}.", token);
-
-    return token;
   }
 }
