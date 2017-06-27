@@ -12,7 +12,6 @@ import com.umasuo.device.center.infrastructure.enums.DeviceStatus;
 import com.umasuo.device.center.infrastructure.exception.AlreadyBoundException;
 import com.umasuo.exception.NotExistException;
 import com.umasuo.exception.ParametersException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +54,9 @@ public class DeviceApplication {
    */
   @Autowired
   private transient RedisTemplate redisTemplate;
+
+  @Autowired
+  private transient MessageApplication messageApplication;
 
   /**
    * 激活设备，与用户绑定。
@@ -102,9 +104,10 @@ public class DeviceApplication {
 
     DeviceActivateResult result = DeviceActivateResult.build(device);
 
-    // TODO: 17/6/27
-    // 7. set device mqtt server username and password
-    // 8. send result to mqtt server for app.
+    //为设备添加权限.
+    messageApplication.addDeviceUser(result.getDeviceId(), draft.getToken());
+    //发布消息通知客户端
+    messageApplication.publish(result.getDeviceId(), userId);
 
     return result;
   }
@@ -112,7 +115,7 @@ public class DeviceApplication {
   /**
    * 接触设备与用户的绑定关系。
    *
-   * @param userId the user id
+   * @param userId  the user id
    * @param unionId the union id
    */
   public void unbind(String userId, String unionId) {
@@ -134,9 +137,9 @@ public class DeviceApplication {
   /**
    * get one device by device id.
    *
-   * @param deviceId String
+   * @param deviceId    String
    * @param developerId the developer id
-   * @param userId the user id
+   * @param userId      the user id
    * @return DeviceView by device id
    */
   public DeviceView getByDeviceId(String deviceId, String developerId, String userId) {
@@ -166,7 +169,7 @@ public class DeviceApplication {
   /**
    * 获取一个用户在某个开发者下的所有设备。
    *
-   * @param userId the user id
+   * @param userId      the user id
    * @param developerId the developer id
    * @return 设备列表 by user and developer
    */
@@ -184,13 +187,13 @@ public class DeviceApplication {
   /**
    * Gets by user and definition.
    *
-   * @param userId the user id
-   * @param developerId the developer id
+   * @param userId             the user id
+   * @param developerId        the developer id
    * @param deviceDefinitionId the device definition id
    * @return the by user and definition
    */
   public DeviceView getByUserAndDefinition(String userId, String developerId,
-      String deviceDefinitionId) {
+                                           String deviceDefinitionId) {
     logger.debug("Enter. userId: {}, developerId: {}, deviceDefinitionId: {}.", userId, developerId,
         deviceDefinitionId);
 

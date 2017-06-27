@@ -19,3 +19,7 @@ spring:
 jwt:
   secret: QWERTYUIOPASDFGHJKLZXCVBNM
   expires: 72000
+
+message-broker:
+  host: localhost
+  port: 1883
