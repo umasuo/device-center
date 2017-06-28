@@ -22,7 +22,7 @@ public class TokenApplication {
   /**
    * Logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(TokenApplication.class);
+  private static final Logger logger = LoggerFactory.getLogger(TokenApplication.class);
 
   /**
    * Validation code expire time;
@@ -57,7 +57,7 @@ public class TokenApplication {
    * @return
    */
   public String createToken(String userId) {
-    LOG.debug("Enter. userId: {}.", userId);
+    logger.debug("Enter. userId: {}.", userId);
 
     String key = USER_DEVICE_TOKEN_PREFIX + userId;
     String token = (String) redisTemplate.opsForValue().get(key);
@@ -66,7 +66,7 @@ public class TokenApplication {
       redisTemplate.opsForValue().set(key, token, EXPIRE_TIME, TIME_UTIL);
     }
 
-    LOG.debug("Exit. token: {}.", token);
+    logger.debug("Exit. token: {}.", token);
     return token;
   }
 
@@ -77,17 +77,17 @@ public class TokenApplication {
    * @param token
    */
   public void validateToken(String userId, String token) {
-    LOG.debug("Enter. userId: {}, token: {}.");
+    logger.debug("Enter. userId: {}, token: {}.");
 
     String key = USER_DEVICE_TOKEN_PREFIX + userId;
     String requestToken = (String) redisTemplate.opsForValue().get(key);
     if (StringUtils.isBlank(requestToken)) {
-      LOG.debug("Can not find token by user: {}.", userId);
+      logger.debug("Can not find token by user: {}.", userId);
       throw new NotExistException("Token not exist or expire.");
     }
 
     if (!requestToken.equals(token)) {
-      LOG.debug("Token not match, input token: {}, request token: {}.", token, requestToken);
+      logger.debug("Token not match, input token: {}, request token: {}.", token, requestToken);
       throw new ParametersException("Token not match");
     }
 
