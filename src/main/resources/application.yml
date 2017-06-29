@@ -23,3 +23,5 @@ jwt:
 message-broker:
   host: localhost
   port: 1883
+  username: username
+  password: password

@@ -33,7 +33,6 @@ public class MessageApplication {
   /**
    * redis ops.
    */
-  @Autowired
   private transient StringRedisTemplate redisTemplate;
 
   /**
@@ -42,8 +41,12 @@ public class MessageApplication {
    * @param appConfig 系统配置
    */
   @Autowired
-  public MessageApplication(AppConfig appConfig) {
+  public MessageApplication(StringRedisTemplate redisTemplate, AppConfig appConfig) {
     this.appConfig = appConfig;
+    this.redisTemplate = redisTemplate;
+    redisTemplate.boundHashOps(USERNAME_PREFIX + appConfig.getUsername()).put("password",
+        appConfig.getPassword());
+
     mqtt = new MQTT();
     mqtt.setUserName(appConfig.getUsername());
     mqtt.setPassword(appConfig.getPassword());
