@@ -242,4 +242,20 @@ public class DeviceService {
 
     return result;
   }
+
+  public Device findByUserAndDeviceId(String userId, String deviceId) {
+    logger.debug("Enter. userId: {}, deviceId: {}.", userId, deviceId);
+
+    Device sample = new Device();
+    sample.setDeveloperId(deviceId);
+    sample.setOwnerId(userId);
+
+    Example<Device> example = Example.of(sample);
+
+    Device result = deviceRepository.findOne(example);
+
+    logger.debug("Exit. device: {}.", result);
+
+    return result;
+  }
 }

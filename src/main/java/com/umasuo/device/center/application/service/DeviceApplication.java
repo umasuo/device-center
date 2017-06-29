@@ -115,21 +115,23 @@ public class DeviceApplication {
   /**
    * 接触设备与用户的绑定关系。
    *
-   * @param userId  the user id
-   * @param unionId the union id
+   * @param userId the user id
+   * @param deviceId the device id
    */
-  public void unbind(String userId, String unionId) {
-    logger.debug("Enter. userId: {}, unionId: {}.", userId, unionId);
+  public void unbind(String userId, String deviceId) {
+    logger.debug("Enter. userId: {}, deviceId: {}.", userId, deviceId);
 
-    Device device = deviceService.findByUserAndUnionId(userId, unionId);
+    Device device = deviceService.findByUserAndDeviceId(userId, deviceId);
 
     if (device == null) {
-      logger.debug("User: {} does not have device: {}.", userId, unionId);
+      logger.debug("User: {} does not have device: {}.", userId, deviceId);
       throw new NotExistException("Can not find device");
     }
 
     device.setStatus(DeviceStatus.UNBIND);
     deviceService.save(device);
+
+    // TODO: 17/6/28 给设备发送信息，清空设备上保存的用户信息
 
     logger.debug("Exit.");
   }
