@@ -2,15 +2,18 @@ package com.umasuo.device.center.application.service;
 
 import com.umasuo.device.center.infrastructure.configuration.AppConfig;
 import com.umasuo.device.center.infrastructure.exception.GeneratePasswordException;
+import com.umasuo.device.center.infrastructure.exception.SubDeviceTopicException;
 import com.umasuo.device.center.infrastructure.util.DevicePasswordUtils;
 import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.QoS;
+import org.fusesource.mqtt.client.Topic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,6 +33,8 @@ public class MessageApplication {
   private transient BlockingConnection publisher;
 
   private static final String USERNAME_PREFIX = "mqtt_user:";
+  private static final String DEVICE_TOPIC_SUB_PREFIX = "device/sub/";
+  private static final String DEVICE_TOPIC_PUB_PREFIX = "device/pub/";
   /**
    * redis ops.
    */
@@ -86,7 +91,7 @@ public class MessageApplication {
     logger.debug("Enter. deviceId: {}, userId: {}.", deviceId, userId);
     // 组织每个用户的App只订阅自己的那一个topic,对topic内容的解析交给程序自己
     String topic = "user:" + userId;
-    //根据一定规则定义message的内容,例如前5个字符表示code，后面表示这次传递的内容.
+    //TODO 根据一定规则定义message的内容,例如前5个字符表示code，后面表示这次传递的内容.
     String message = "10001:" + deviceId;
     publish(topic, message.getBytes(), QoS.AT_LEAST_ONCE, false);
   }
@@ -100,15 +105,29 @@ public class MessageApplication {
   public void addDeviceUser(String username, String publicKey) {
     logger.debug("Add broker user: {}.", username);
 
-    String password = DevicePasswordUtils.getPassword(publicKey);
-    if (password == null) {
-      throw new GeneratePasswordException("Generate device password failed.");
+    try {
+      String password = DevicePasswordUtils.getPassword(publicKey);
+      if (password == null) {
+        throw new GeneratePasswordException("Generate device password failed.");
+      }
+      Topic[] topic = {new Topic(DEVICE_TOPIC_PUB_PREFIX + "username", QoS.AT_LEAST_ONCE)};
+      publisher.subscribe(topic);
+      BoundHashOperations setOperations = redisTemplate.boundHashOps(USERNAME_PREFIX + username);
+      //TODO MQTT 的的密码需要采用加密模式
+      setOperations.put("password", password);
+    } catch (Exception e) {
+      logger.error("Subscribe device topic failed. deviceId : {}", username);
+      throw new SubDeviceTopicException("Subscribe device topic failed. deviceId : " + username);
     }
 
-    BoundHashOperations setOperations = redisTemplate.boundHashOps(USERNAME_PREFIX + username);
-    //TODO MQTT 的的密码需要采用加密模式
-    setOperations.put("password", password);
   }
 
+  /**
+   * 系统启动时运行，用于接受Broker中的消息，并转发处理.
+   */
+  @Scheduled
+  public void executor() {
+    logger.info("start process data.");
+  }
 
 }
