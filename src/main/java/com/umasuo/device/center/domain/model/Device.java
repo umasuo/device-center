@@ -59,7 +59,7 @@ public class Device {
   /**
    * 任何接入云平台的设备，都属于一个事先定义好的设备类型.
    */
-  private String deviceDefineId;
+  private String productId;
 
   /**
    * 开发者ID，任何接入云平台的设备，都属于一个固定的开发者.

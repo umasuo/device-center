@@ -17,7 +17,7 @@ public class DeviceMapper {
 
   public static Device toModel(DeviceDraft draft, String developerId, String userId) {
     Device device = new Device();
-    device.setDeviceDefineId(draft.getProductId());
+    device.setProductId(draft.getProductId());
     device.setUnionId(draft.getUnionId());
     device.setDeveloperId(developerId);
     device.setOwnerId(userId);
@@ -31,7 +31,7 @@ public class DeviceMapper {
     deviceView.setLastModifiedAt(device.getLastModifiedAt());
     deviceView.setVersion(device.getVersion());
     deviceView.setCustomizedId(device.getUnionId());
-    deviceView.setDeviceDefineId(device.getDeviceDefineId());
+    deviceView.setDeviceDefineId(device.getProductId());
     deviceView.setOwnerId(device.getOwnerId());
     deviceView.setDeveloperId(device.getDeveloperId());
 

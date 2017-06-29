@@ -4,6 +4,7 @@ import com.umasuo.device.center.application.dto.DeviceActivateResult;
 import com.umasuo.device.center.application.dto.DeviceDraft;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.application.service.DeviceApplication;
+import com.umasuo.device.center.application.service.MessageApplication;
 import com.umasuo.device.center.infrastructure.Router;
 
 import org.slf4j.Logger;

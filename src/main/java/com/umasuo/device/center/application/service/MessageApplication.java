@@ -1,7 +1,8 @@
 package com.umasuo.device.center.application.service;
 
 import com.umasuo.device.center.infrastructure.configuration.AppConfig;
-import org.apache.tomcat.util.security.MD5Encoder;
+import com.umasuo.device.center.infrastructure.exception.GeneratePasswordException;
+import com.umasuo.device.center.infrastructure.util.DevicePasswordUtils;
 import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.QoS;
@@ -9,9 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import sun.security.provider.MD5;
 
 /**
  * Created by umasuo on 17/6/27.
@@ -34,7 +34,7 @@ public class MessageApplication {
    * redis ops.
    */
   @Autowired
-  private transient RedisTemplate redisTemplate;
+  private transient StringRedisTemplate redisTemplate;
 
   /**
    * 初始化和message broker的连接.
@@ -91,15 +91,21 @@ public class MessageApplication {
   /**
    * 在redis中添加可以连接上来的用户名和密码.
    *
-   * @param username 用户名为设备的ID
-   * @param publicKey    password 为下发到设备的token
+   * @param username  用户名为设备的ID
+   * @param publicKey password 为下发到设备的token
    */
   public void addDeviceUser(String username, String publicKey) {
     logger.debug("Add broker user: {}.", username);
-    String md5 = MD5Encoder.encode(publicKey.getBytes());
-    String password = md5.substring(8,24);
+
+    String password = DevicePasswordUtils.getPassword(publicKey);
+    if (password == null) {
+      throw new GeneratePasswordException("Generate device password failed.");
+    }
+
     BoundHashOperations setOperations = redisTemplate.boundHashOps(USERNAME_PREFIX + username);
     //TODO MQTT 的的密码需要采用加密模式
     setOperations.put("password", password);
   }
+
+
 }

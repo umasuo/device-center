@@ -95,7 +95,7 @@ public class DeviceService {
     logger.debug("Enter. productId: {}.", deviceDefineId);
 
     Device device = new Device();
-    device.setDeviceDefineId(deviceDefineId);
+    device.setProductId(deviceDefineId);
     Example<Device> example = Example.of(device);
     List<Device> devices = deviceRepository.findAll(example);
 
@@ -117,7 +117,7 @@ public class DeviceService {
         deviceDefinitionId);
 
     Device sample = new Device();
-    sample.setDeviceDefineId(deviceDefinitionId);
+    sample.setProductId(deviceDefinitionId);
     sample.setOwnerId(userId);
     sample.setDeveloperId(developerId);
 
