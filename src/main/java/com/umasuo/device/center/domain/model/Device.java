@@ -71,8 +71,6 @@ public class Device {
    */
   private String ownerId;
 
-  private String secretKey;
-
   private String publicKey;
 
   private String deviceId;

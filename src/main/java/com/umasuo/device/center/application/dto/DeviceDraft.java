@@ -21,7 +21,7 @@ public class DeviceDraft implements Serializable {
    * device definition id.
    */
   @NotNull
-  private String deviceDefineId;
+  private String productId;
 
   @NotNull
   private String unionId;

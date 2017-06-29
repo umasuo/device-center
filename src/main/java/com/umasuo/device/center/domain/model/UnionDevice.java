@@ -60,4 +60,9 @@ public class UnionDevice {
 
   @Column(name = "product_Id")
   private String productId;
+
+  /**
+   * 设备出产时带有的一个用于加密数据的key.
+   */
+  private String secretKey;
 }

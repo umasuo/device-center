@@ -17,7 +17,7 @@ public class DeviceMapper {
 
   public static Device toModel(DeviceDraft draft, String developerId, String userId) {
     Device device = new Device();
-    device.setDeviceDefineId(draft.getDeviceDefineId());
+    device.setDeviceDefineId(draft.getProductId());
     device.setUnionId(draft.getUnionId());
     device.setDeveloperId(developerId);
     device.setOwnerId(userId);

@@ -37,7 +37,7 @@ public class UnionDeviceController {
   @Autowired
   private UnionDeviceService unionDeviceService;
 
-  @PostMapping(Router.UNION_ROOT)
+  @PostMapping(Router.UNION_LIST)
   public List<UnionDevice> batchCreate(@RequestHeader("developerId") String developerId,
       @RequestBody @Valid UnionDeviceRequest request) {
     LOG.info("Enter. developerId: {}, request: {}.", developerId, request);
