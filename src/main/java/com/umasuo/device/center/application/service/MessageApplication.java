@@ -1,6 +1,7 @@
 package com.umasuo.device.center.application.service;
 
 import com.umasuo.device.center.infrastructure.configuration.AppConfig;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.QoS;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import sun.security.provider.MD5;
 
 /**
  * Created by umasuo on 17/6/27.
@@ -90,12 +92,14 @@ public class MessageApplication {
    * 在redis中添加可以连接上来的用户名和密码.
    *
    * @param username 用户名为设备的ID
-   * @param token    password 为下发到设备的token
+   * @param publicKey    password 为下发到设备的token
    */
-  public void addDeviceUser(String username, String token) {
+  public void addDeviceUser(String username, String publicKey) {
     logger.debug("Add broker user: {}.", username);
-
+    String md5 = MD5Encoder.encode(publicKey.getBytes());
+    String password = md5.substring(8,24);
     BoundHashOperations setOperations = redisTemplate.boundHashOps(USERNAME_PREFIX + username);
-    setOperations.put("password", token);
+    //TODO MQTT 的的密码需要采用加密模式
+    setOperations.put("password", password);
   }
 }

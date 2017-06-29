@@ -105,7 +105,7 @@ public class DeviceApplication {
     DeviceActivateResult result = DeviceActivateResult.build(device);
 
     //为设备添加权限.
-    messageApplication.addDeviceUser(result.getDeviceId(), draft.getToken());
+    messageApplication.addDeviceUser(result.getDeviceId(), result.getPublicKey());
     //发布消息通知客户端
     messageApplication.publish(result.getDeviceId(), userId);
 
