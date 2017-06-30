@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by umasuo on 17/6/27.
@@ -47,6 +46,7 @@ public class MessageApplication implements CommandLineRunner {
    */
   private transient StringRedisTemplate redisTemplate;
 
+
   private transient DeviceMessageHandler deviceMessageHandler;
 
 
@@ -58,13 +58,13 @@ public class MessageApplication implements CommandLineRunner {
   @Autowired
   public MessageApplication(StringRedisTemplate redisTemplate,
                             DeviceMessageHandler deviceMessageHandler,
-                            AppConfig appConfig) {
+                            AppConfig appConfig
+  ) {
     this.appConfig = appConfig;
     this.redisTemplate = redisTemplate;
     this.deviceMessageHandler = deviceMessageHandler;
     redisTemplate.boundHashOps(USERNAME_PREFIX + appConfig.getUsername()).put("password",
         appConfig.getPassword());
-    redisTemplate.boundHashOps(USERNAME_PREFIX + appConfig.getUsername()).put("is_superuser", 1);
 
     mqtt = new MQTT();
     mqtt.setUserName(appConfig.getUsername());
