@@ -47,17 +47,24 @@ public class MessageApplication implements CommandLineRunner {
    */
   private transient StringRedisTemplate redisTemplate;
 
+  private transient DeviceMessageHandler deviceMessageHandler;
+
+
   /**
    * 初始化和message broker的连接.
    *
    * @param appConfig 系统配置
    */
   @Autowired
-  public MessageApplication(StringRedisTemplate redisTemplate, AppConfig appConfig) {
+  public MessageApplication(StringRedisTemplate redisTemplate,
+                            DeviceMessageHandler deviceMessageHandler,
+                            AppConfig appConfig) {
     this.appConfig = appConfig;
     this.redisTemplate = redisTemplate;
+    this.deviceMessageHandler = deviceMessageHandler;
     redisTemplate.boundHashOps(USERNAME_PREFIX + appConfig.getUsername()).put("password",
         appConfig.getPassword());
+    redisTemplate.boundHashOps(USERNAME_PREFIX + appConfig.getUsername()).put("is_superuser", 1);
 
     mqtt = new MQTT();
     mqtt.setUserName(appConfig.getUsername());
@@ -142,9 +149,13 @@ public class MessageApplication implements CommandLineRunner {
       Message message = connection.receive();
       if (message != null) {
         String topic = message.getTopic();//从这里可以获得deviceID，
+        String deviceId = topic.substring(DEVICE_TOPIC_PUB_PREFIX.length() - 1);
         String payload = new String(message.getPayload());//从这里可以获取device上发的命令和数据
-        //TODO  处理数据
-        message.ack();
+
+        boolean handlerResult = deviceMessageHandler.handler(deviceId, payload);
+        if (handlerResult) {
+          message.ack();
+        }
       }
     }
   }
