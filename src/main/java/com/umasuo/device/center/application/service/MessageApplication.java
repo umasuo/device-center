@@ -6,21 +6,26 @@ import com.umasuo.device.center.infrastructure.exception.SubDeviceTopicException
 import com.umasuo.device.center.infrastructure.util.DevicePasswordUtils;
 import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
+import org.fusesource.mqtt.client.Message;
 import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by umasuo on 17/6/27.
  */
 @Service
-public class MessageApplication {
+public class MessageApplication implements CommandLineRunner {
   /**
    * Logger.
    */
@@ -30,11 +35,13 @@ public class MessageApplication {
 
   private transient MQTT mqtt;
 
-  private transient BlockingConnection publisher;
+  private transient BlockingConnection connection;
 
   private static final String USERNAME_PREFIX = "mqtt_user:";
   private static final String DEVICE_TOPIC_SUB_PREFIX = "device/sub/";
   private static final String DEVICE_TOPIC_PUB_PREFIX = "device/pub/";
+
+  private List<Topic> topics = new ArrayList<>();
   /**
    * redis ops.
    */
@@ -55,9 +62,9 @@ public class MessageApplication {
     mqtt = new MQTT();
     mqtt.setUserName(appConfig.getUsername());
     mqtt.setPassword(appConfig.getPassword());
-    publisher = mqtt.blockingConnection();
+    connection = mqtt.blockingConnection();
     try {
-      publisher.connect();
+      connection.connect();
       logger.info("Connect to message broker: " + appConfig.getMsgBrokerHost());
     } catch (Exception e) {
       logger.error("Connect message broker failed.", e);
@@ -77,7 +84,7 @@ public class MessageApplication {
     logger.debug("Enter. topic: {}, payload: {}, qos: {}, retain: {}.", topic, new String
         (payload), qos, retain);
     try {
-      publisher.publish(topic, payload, qos, retain);
+      connection.publish(topic, payload, qos, retain);
     } catch (Exception e) {
       logger.error("publish message failed.", e);
     }
@@ -110,8 +117,8 @@ public class MessageApplication {
       if (password == null) {
         throw new GeneratePasswordException("Generate device password failed.");
       }
-      Topic[] topic = {new Topic(DEVICE_TOPIC_PUB_PREFIX + "username", QoS.AT_LEAST_ONCE)};
-      publisher.subscribe(topic);
+      topics.add(new Topic(DEVICE_TOPIC_PUB_PREFIX + username, QoS.AT_LEAST_ONCE));
+      connection.subscribe(topics.toArray(new Topic[topics.size()]));
       BoundHashOperations setOperations = redisTemplate.boundHashOps(USERNAME_PREFIX + username);
       //TODO MQTT 的的密码需要采用加密模式
       setOperations.put("password", password);
@@ -123,11 +130,22 @@ public class MessageApplication {
   }
 
   /**
-   * 系统启动时运行，用于接受Broker中的消息，并转发处理.
+   * Service 启动时自动接受
+   *
+   * @param args
+   * @throws Exception
    */
-  @Scheduled
-  public void executor() {
+  @Override
+  public void run(String... args) throws Exception {
     logger.info("start process data.");
+    while (true) {
+      Message message = connection.receive();
+      if (message != null) {
+        String topic = message.getTopic();//从这里可以获得deviceID，
+        String payload = new String(message.getPayload());//从这里可以获取device上发的命令和数据
+        //TODO  处理数据
+        message.ack();
+      }
+    }
   }
-
 }
