@@ -50,7 +50,7 @@ public class DeviceController {
 
     DeviceActivateResult result = deviceApplication.activate(draft, userId);
 
-    logger.info("Exit.", result);
+    logger.info("Exit. result:{}.", result);
     return result;
   }
 

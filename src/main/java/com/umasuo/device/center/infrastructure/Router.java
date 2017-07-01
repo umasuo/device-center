@@ -26,6 +26,4 @@ public class Router {
   public static final String DEVICE_TOKEN = DEVICE_CENTER_ROOT + "/tokens";
 
   public static final String UNION_ROOT = DEVICE_CENTER_ROOT + "/unions";
-
-  public static final String UNION_LIST = UNION_ROOT + "/list";
 }

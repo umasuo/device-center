@@ -84,8 +84,7 @@ public class DeviceApplication {
     // 2. 检查userId和token是否匹配
     tokenApplication.validateToken(userId, draft.getToken());
 
-    // 3. 根据userId获取developerId
-
+    //TODO 3. 根据userId获取developerId
 
     // 4. 新建device信息，并且与userId绑定
     Device device = deviceService.findByUserAndUnionId(userId, draft.getUnionId());
@@ -98,7 +97,7 @@ public class DeviceApplication {
     device.setStatus(DeviceStatus.BIND);
     deviceService.save(device);
 
-    // 6. 保存deviceId为key，publicKey为value的redis数据
+    // 6. 保存deviceId为key，publicKey为value的redis数据,public key也是mqtt中的密码来源
     redisTemplate.opsForValue().set(DEVICE_PUBLIC_KEY_PREFIX + device.getDeviceId(),
         device.getPublicKey());
 
@@ -132,6 +131,7 @@ public class DeviceApplication {
     deviceService.save(device);
 
     // TODO: 17/6/28 给设备发送信息，清空设备上保存的用户信息
+    // 清空相关信息
 
     logger.debug("Exit.");
   }

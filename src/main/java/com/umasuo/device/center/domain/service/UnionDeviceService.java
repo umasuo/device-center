@@ -42,6 +42,7 @@ public class UnionDeviceService {
       UnionDevice unionDevice = new UnionDevice();
       unionDevice.setDeveloperId(developerId);
       unionDevice.setProductId(request.getProductId());
+      //todo 添加secret key
       unionDevices.add(unionDevice);
     }
 

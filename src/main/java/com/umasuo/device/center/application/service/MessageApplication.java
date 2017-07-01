@@ -128,6 +128,7 @@ public class MessageApplication implements CommandLineRunner {
       connection.subscribe(topics.toArray(new Topic[topics.size()]));
       BoundHashOperations setOperations = redisTemplate.boundHashOps(USERNAME_PREFIX + username);
       //TODO MQTT 的的密码需要采用加密模式
+      //这里其实需要考虑redis失效的场景
       setOperations.put("password", password);
     } catch (Exception e) {
       logger.error("Subscribe device topic failed. deviceId : {}", username);
