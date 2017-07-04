@@ -27,17 +27,12 @@ public class TokenApplication {
   /**
    * Validation code expire time;
    */
-  private static final long EXPIRE_TIME = 3 * 60 * 1000L;
+  private static final long EXPIRE_TIME = 5;
 
   /**
    * Token prefix.
    */
   private static final String USER_DEVICE_TOKEN_PREFIX = "user:device:token:";
-
-  /**
-   * Redis time util.
-   */
-  private static final TimeUnit TIME_UTIL = TimeUnit.MILLISECONDS;
 
   /**
    * Token length.
@@ -63,7 +58,7 @@ public class TokenApplication {
     String token = (String) redisTemplate.opsForValue().get(key);
     if (StringUtils.isBlank(token)) {
       token = RandomStringUtils.randomAlphanumeric(TOKEN_LENGTH);
-      redisTemplate.opsForValue().set(key, token, EXPIRE_TIME, TIME_UTIL);
+      redisTemplate.opsForValue().set(key, token, EXPIRE_TIME, TimeUnit.SECONDS);
     }
 
     logger.debug("Exit. token: {}.", token);

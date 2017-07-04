@@ -21,12 +21,12 @@ public final class ReportUtils {
   /**
    * Merge report.
    *
-   * @param totalReports the total reports
+   * @param totalReports    the total reports
    * @param registerReports the register reports
    * @return the list
    */
   public static List<DeviceReportView> mergeReport(List<HashMap> totalReports,
-      List<HashMap> registerReports) {
+                                                   List<HashMap> registerReports) {
     List<DeviceReportView> result = Lists.newArrayList();
 
     Consumer<HashMap> totalConsumer = map -> handleTotalReport(result, map);
@@ -56,7 +56,7 @@ public final class ReportUtils {
 
     reportView.setDeveloperId(map.get("developerId").toString());
     reportView.setDeviceDefinitionId(map.get("definitionId").toString());
-    reportView.setTotalNumber(Integer.valueOf(map.get("totalCount").toString()));
+    reportView.setTotalNumber((Integer) map.get("totalCount"));
 
     // TODO: 17/6/16 
     reportView.setOnlineNumber(0);

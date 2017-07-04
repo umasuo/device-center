@@ -5,6 +5,7 @@ import com.umasuo.device.center.application.dto.UnionDeviceRequest;
 import com.umasuo.device.center.domain.model.UnionDevice;
 import com.umasuo.device.center.infrastructure.repository.UnionDeviceRepository;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class UnionDeviceService {
    */
   private static final Logger LOG = LoggerFactory.getLogger(UnionDeviceService.class);
 
+  /**
+   * Token length.
+   */
+  private static final int SECRET_KEY_LENGTH = 7;
+
   @Autowired
   private transient UnionDeviceRepository repository;
 
@@ -30,19 +36,21 @@ public class UnionDeviceService {
    * 批量新建union id.
    *
    * @param developerId the developer id
-   * @param request the quantity
+   * @param request     the quantity
    * @return the list
    */
   public List<UnionDevice> batchCreate(String developerId, UnionDeviceRequest request) {
     LOG.debug("Enter. developerId: {}, request: {}.", developerId, request);
 
     List<UnionDevice> unionDevices = Lists.newArrayList();
+    //todo 检查product 是否存在
 
-    for (int i = 0; i < request.getQuantity(); i ++) {
+    for (int i = 0; i < request.getQuantity(); i++) {
       UnionDevice unionDevice = new UnionDevice();
       unionDevice.setDeveloperId(developerId);
       unionDevice.setProductId(request.getProductId());
-      //todo 添加secret key
+      // set a random secret key
+      unionDevice.setSecretKey(RandomStringUtils.randomAlphanumeric(SECRET_KEY_LENGTH));
       unionDevices.add(unionDevice);
     }
 

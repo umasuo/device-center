@@ -40,19 +40,6 @@ public class UnionDevice {
   protected Long createdAt;
 
   /**
-   * The Last modified at.
-   */
-  @LastModifiedDate
-  @Column(name = "last_modified_at")
-  protected Long lastModifiedAt;
-
-  /**
-   * version used for update date check.
-   */
-  @Version
-  private Integer version;
-
-  /**
    * The developer id.
    */
   @Column(name = "developer_id")

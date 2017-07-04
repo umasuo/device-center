@@ -55,6 +55,7 @@ public class DeviceMapper {
     device.setDeveloperId(developerId);
     device.setOwnerId(userId);
     device.setUnionId(draft.getUnionId());
+    device.setProductId(draft.getProductId());
     device.setPublicKey(RandomStringUtils.randomAlphanumeric(9));
     device.setDeviceId(UUID.randomUUID().toString());
 

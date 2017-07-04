@@ -1,10 +1,6 @@
 package com.umasuo.device.center.infrastructure.exception;
 
 import com.umasuo.device.center.infrastructure.util.JsonUtils;
-import com.umasuo.exception.AlreadyExistException;
-import com.umasuo.exception.NotExistException;
-import com.umasuo.exception.PasswordErrorException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -59,18 +55,6 @@ public class ExceptionHandler implements com.umasuo.exception.handler.ExceptionH
    */
   private ExceptionBody getBody(Exception ex) {
     ExceptionBody body = null;
-    if (ex instanceof NotExistException) {
-      body = ExceptionBody.of(ExceptionBody.DEVELOPER_NOT_EXIST_CODE, ExceptionBody
-          .DEVELOPER_NOT_EXIST_MESSAGE);
-    }
-    if (ex instanceof AlreadyExistException) {
-      body = ExceptionBody.of(ExceptionBody.DEVELOPER_ALREADY_EXIST_CODE, ExceptionBody
-          .DEVELOPER_ALREADY_EXIST_MESSAGE);
-    }
-    if (ex instanceof PasswordErrorException) {
-      body = ExceptionBody.of(ExceptionBody.EMAIL_OR_PASSWORD_ERROR_CODE, ExceptionBody
-          .EMAIL_OR_PASSWORD_ERROR_MESSAGE);
-    }
     if (ex instanceof AlreadyBoundException) {
       body = ExceptionBody.of(ExceptionBody.DEVICE_ALREADY_BOUND_CODE,
           ExceptionBody.DEVICE_ALREADY_BOUND_MESSAGE);

@@ -1,6 +1,8 @@
 package com.umasuo.device.center.application.rest;
 
 import com.umasuo.device.center.application.dto.UnionDeviceRequest;
+import com.umasuo.device.center.application.dto.UnionDeviceView;
+import com.umasuo.device.center.application.dto.mapper.UnionMapper;
 import com.umasuo.device.center.domain.model.UnionDevice;
 import com.umasuo.device.center.domain.service.UnionDeviceService;
 import com.umasuo.device.center.infrastructure.Router;
@@ -11,14 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
 /**
  * Created by Davis on 17/6/27.
@@ -29,7 +28,7 @@ public class UnionDeviceController {
   /**
    * Logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(UnionDeviceController.class);
+  private static final Logger logger = LoggerFactory.getLogger(UnionDeviceController.class);
 
   /**
    * The application.
@@ -37,15 +36,14 @@ public class UnionDeviceController {
   @Autowired
   private UnionDeviceService unionDeviceService;
 
-  //todo return view not entity
   @PostMapping(Router.UNION_ROOT)
-  public List<UnionDevice> batchCreate(@RequestHeader("developerId") String developerId,
-      @RequestBody @Valid UnionDeviceRequest request) {
-    LOG.info("Enter. developerId: {}, request: {}.", developerId, request);
+  public List<UnionDeviceView> batchCreate(@RequestHeader("developerId") String developerId,
+                                           @RequestBody @Valid UnionDeviceRequest request) {
+    logger.info("Enter. developerId: {}, request: {}.", developerId, request);
 
-    List<UnionDevice> result = unionDeviceService.batchCreate(developerId, request);
+    List<UnionDevice> unions = unionDeviceService.batchCreate(developerId, request);
 
-    LOG.info("Exit.");
-    return result;
+    logger.info("Exit. unionSize: {}.", unions.size());
+    return UnionMapper.toView(unions);
   }
 }

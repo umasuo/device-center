@@ -66,7 +66,7 @@ public class DeviceService {
   /**
    * 获取用户在某个开发者下的所有设备.
    *
-   * @param userId userID
+   * @param userId      userID
    * @param developerId 开发者ID
    * @return list of device
    */
@@ -106,13 +106,13 @@ public class DeviceService {
   /**
    * Get device by user and device definition.
    *
-   * @param userId the user id
-   * @param developerId the developer id
+   * @param userId             the user id
+   * @param developerId        the developer id
    * @param deviceDefinitionId the device definition id
    * @return Device by user and definition
    */
   public Device getByUserAndDefinition(String userId, String developerId,
-      String deviceDefinitionId) {
+                                       String deviceDefinitionId) {
     logger.debug("Enter. userId: {}, developerId: {}, deviceDefinitionId: {}.", userId, developerId,
         deviceDefinitionId);
 
@@ -167,7 +167,7 @@ public class DeviceService {
    * Gets registered report.
    *
    * @param startTime the start time
-   * @param endTime the end time
+   * @param endTime   the end time
    * @return the registered report
    */
   public List<HashMap> getIncreaseReport(long startTime, long endTime) {
@@ -181,12 +181,11 @@ public class DeviceService {
   }
 
 
-
   /**
    * Gets developer registered report.
    *
    * @param developerId the developer id
-   * @param startTime the start time
+   * @param startTime   the start time
    * @return the developer registered report
    */
   public List<HashMap> getIncreaseReport(String developerId, long startTime) {
@@ -248,7 +247,7 @@ public class DeviceService {
     logger.debug("Enter. userId: {}, deviceId: {}.", userId, deviceId);
 
     Device sample = new Device();
-    sample.setDeveloperId(deviceId);
+    sample.setDeviceId(deviceId);
     sample.setOwnerId(userId);
 
     Example<Device> example = Example.of(sample);

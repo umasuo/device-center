@@ -5,10 +5,12 @@ package com.umasuo.device.center.infrastructure;
  */
 public class Router {
 
+  public static final String VERSION = "/v1";
+
   /**
-   * authentication root.
+   * device root.
    */
-  public static final String DEVICE_CENTER_ROOT = "/devices";
+  public static final String DEVICE_CENTER_ROOT = VERSION + "/devices";
 
   /**
    * The constant REPORT_ROOT.
