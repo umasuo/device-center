@@ -30,10 +30,13 @@ public class DeviceMapper {
     deviceView.setCreatedAt(device.getCreatedAt());
     deviceView.setLastModifiedAt(device.getLastModifiedAt());
     deviceView.setVersion(device.getVersion());
-    deviceView.setCustomizedId(device.getUnionId());
-    deviceView.setDeviceDefineId(device.getProductId());
-    deviceView.setOwnerId(device.getOwnerId());
+    deviceView.setUnionId(device.getUnionId());
+    deviceView.setProductId(device.getProductId());
     deviceView.setDeveloperId(device.getDeveloperId());
+    deviceView.setOwnerId(device.getOwnerId());
+    deviceView.setPublicKey(device.getPublicKey());
+    deviceView.setDeviceId(device.getDeviceId());
+    deviceView.setStatus(device.getStatus());
 
     return deviceView;
   }

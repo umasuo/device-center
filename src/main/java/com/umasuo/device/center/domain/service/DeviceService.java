@@ -136,7 +136,7 @@ public class DeviceService {
    *
    * @return the all report
    */
-  public List<HashMap> getAllReport() {
+  public List<HashMap> getTotalReport() {
     logger.debug("Enter.");
 
     List<HashMap> result = deviceRepository.getReport();
@@ -148,16 +148,15 @@ public class DeviceService {
 
 
   /**
-   * Gets registered report.
+   * Gets developer all report.
    *
-   * @param startTime the start time
-   * @param endTime the end time
-   * @return the registered report
+   * @param developerId the developer id
+   * @return the developer all report
    */
-  public List<HashMap> getRegisteredReport(long startTime, long endTime) {
-    logger.debug("Enter.");
+  public List<HashMap> getTotalReport(String developerId) {
+    logger.debug("Enter. developerId: {}.", developerId);
 
-    List<HashMap> result = deviceRepository.getRegisterReport(startTime, endTime);
+    List<HashMap> result = deviceRepository.getReport(developerId);
 
     logger.debug("Exit. result size: {}.", result.size());
 
@@ -165,20 +164,22 @@ public class DeviceService {
   }
 
   /**
-   * Gets developer all report.
+   * Gets registered report.
    *
-   * @param developerId the developer id
-   * @return the developer all report
+   * @param startTime the start time
+   * @param endTime the end time
+   * @return the registered report
    */
-  public List<HashMap> getDeveloperAllReport(String developerId) {
-    logger.debug("Enter. developerId: {}.", developerId);
+  public List<HashMap> getIncreaseReport(long startTime, long endTime) {
+    logger.debug("Enter.");
 
-    List<HashMap> result = deviceRepository.getDeveloperReport(developerId);
+    List<HashMap> result = deviceRepository.getIncreaseReport(startTime, endTime);
 
     logger.debug("Exit. result size: {}.", result.size());
 
     return result;
   }
+
 
 
   /**
@@ -188,7 +189,7 @@ public class DeviceService {
    * @param startTime the start time
    * @return the developer registered report
    */
-  public List<HashMap> getDeveloperRegisteredReport(String developerId, long startTime) {
+  public List<HashMap> getIncreaseReport(String developerId, long startTime) {
     logger.debug("Enter. developerId: {}, startTime: {}.", developerId, startTime);
 
     List<HashMap> result = deviceRepository.getDeveloperRegisterReport(developerId, startTime);

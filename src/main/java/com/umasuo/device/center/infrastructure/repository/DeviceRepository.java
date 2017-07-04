@@ -19,10 +19,10 @@ public interface DeviceRepository extends JpaRepository<Device, String> {
   List<HashMap> getReport();
 
   @Query("select new map(d.developerId as developerId, d.productId as definitionId, count(d) as totalCount) from Device d group by d.developerId, d.productId having d.developerId = ?1")
-  List<HashMap> getDeveloperReport(String developerId);
+  List<HashMap> getReport(String developerId);
 
   @Query("select new map(d.developerId as developerId, d.productId as definitionId, count(d) as registerCount) from Device d where d.createdAt >= ?1 and d.createdAt < ?2 group by d.developerId, d.productId")
-  List<HashMap> getRegisterReport(long startTime, long endTime);
+  List<HashMap> getIncreaseReport(long startTime, long endTime);
 
   @Query("select new map(d.developerId as developerId, d.productId as definitionId, count(d) as registerCount) from Device d where d.createdAt >= ?2 group by d.developerId, d.productId having d.developerId = ?1")
   List<HashMap> getDeveloperRegisterReport(String developerId, long startTime);

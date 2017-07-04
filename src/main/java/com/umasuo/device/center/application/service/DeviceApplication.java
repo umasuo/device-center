@@ -58,6 +58,9 @@ public class DeviceApplication {
   @Autowired
   private transient MessageApplication messageApplication;
 
+  @Autowired
+  private transient SessionApplication sessionApplication;
+
   /**
    * 激活设备，与用户绑定。
    *
@@ -107,6 +110,8 @@ public class DeviceApplication {
     messageApplication.addDeviceUser(result.getDeviceId(), result.getPublicKey());
     //发布消息通知客户端
     messageApplication.publish(result.getDeviceId(), userId);
+    //更新设备的session
+    sessionApplication.updateSession(device);
 
     return result;
   }
@@ -114,7 +119,7 @@ public class DeviceApplication {
   /**
    * 接触设备与用户的绑定关系。
    *
-   * @param userId the user id
+   * @param userId   the user id
    * @param deviceId the device id
    */
   public void unbind(String userId, String deviceId) {
@@ -131,7 +136,8 @@ public class DeviceApplication {
     deviceService.save(device);
 
     // TODO: 17/6/28 给设备发送信息，清空设备上保存的用户信息
-    // 清空相关信息
+
+    sessionApplication.clearSession(device.getDeveloperId(), device.getDeviceId());
 
     logger.debug("Exit.");
   }
