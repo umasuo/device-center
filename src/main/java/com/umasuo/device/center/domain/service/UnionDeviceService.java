@@ -45,6 +45,7 @@ public class UnionDeviceService {
     List<UnionDevice> unionDevices = Lists.newArrayList();
     //todo 检查product 是否存在
 
+    // todo 这将是一个漫长的请求
     for (int i = 0; i < request.getQuantity(); i++) {
       UnionDevice unionDevice = new UnionDevice();
       unionDevice.setDeveloperId(developerId);
