@@ -1,6 +1,8 @@
 package com.umasuo.device.center.application.rest;
 
+import com.google.api.client.util.Lists;
 import com.umasuo.device.center.application.dto.DeviceActivateResult;
+import com.umasuo.device.center.application.dto.DeviceData;
 import com.umasuo.device.center.application.dto.DeviceDraft;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.application.service.DeviceApplication;
@@ -129,5 +131,16 @@ public class DeviceController {
     logger.info("Exit. device: {}.", device);
 
     return device;
+  }
+
+  @GetMapping(value = Router.DEVICE_CENTER_ROOT)
+  public List<DeviceData> getDeviceData(@RequestHeader String developerId) {
+    logger.info("Enter. developerId: {}.", developerId);
+
+    List<DeviceData> deviceData = Lists.newArrayList();
+
+    logger.info("Exit. deviceData size: {}.", deviceData.size());
+
+    return deviceData;
   }
 }
