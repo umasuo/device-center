@@ -97,8 +97,8 @@ public class DeviceController {
    * @param developerId String in header
    * @return list of device view
    */
-  @GetMapping(value = Router.DEVICE_CENTER_ROOT, params = {"userId"})
-  public List<DeviceView> getAllDeviceByUser(@RequestParam String userId,
+  @GetMapping(value = Router.DEVICE_CENTER_ROOT, headers = {"userId", "developerId"})
+  public List<DeviceView> getAllDeviceByUser(@RequestHeader String userId,
                                              @RequestHeader String developerId) {
     logger.info("Enter. userId: {}, developerId: {}.", userId, developerId);
 
@@ -119,7 +119,7 @@ public class DeviceController {
   @GetMapping(value = Router.DEVICE_CENTER_ROOT, params = {"userId", "deviceDefinitionId"})
   public DeviceView getDeviceByDefinition(@RequestParam String userId,
                                           @RequestParam String deviceDefinitionId, @RequestHeader
-                                                String developerId) {
+                                              String developerId) {
     logger.info("Enter. userId: {}, developerId: {}, deviceDefinitionId: {}.",
         userId, developerId, deviceDefinitionId);
 
