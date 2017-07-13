@@ -5,6 +5,7 @@ import com.umasuo.device.center.application.dto.UnionDeviceRequest;
 import com.umasuo.device.center.domain.model.UnionDevice;
 import com.umasuo.device.center.infrastructure.repository.UnionDeviceRepository;
 
+import com.umasuo.exception.NotExistException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +83,10 @@ public class UnionDeviceService {
     LOG.debug("Enter. unionId: {}.", unionId);
 
     UnionDevice unionDevice = repository.findOne(unionId);
-
+    if (unionDevice == null) {
+      LOG.debug("Device: {} does not exist.", unionDevice);
+      throw new NotExistException("Device not exist");
+    }
     LOG.debug("Exit. unionDevice: {}.", unionDevice);
 
     return unionDevice;

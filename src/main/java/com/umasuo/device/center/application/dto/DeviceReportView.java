@@ -22,15 +22,15 @@ public class DeviceReportView {
   /**
    * The Register number.
    */
-  private Integer registerNumber;
+  private long registerNumber;
 
   /**
    * The Online number.
    */
-  private Integer onlineNumber;
+  private long onlineNumber;
 
   /**
    * The Total number.
    */
-  private Integer totalNumber;
+  private long totalNumber;
 }

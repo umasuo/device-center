@@ -20,8 +20,9 @@ jwt:
   secret: QWERTYUIOPASDFGHJKLZXCVBNM
   expires: 72000
 
-message.broker:
-  host: localhost
-  port: 1883
-  username: username
-  password: password
+message:
+  broker:
+    host: localhost
+    port: 1883
+    username: username
+    password: password

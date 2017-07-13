@@ -55,8 +55,8 @@ public final class ReportUtils {
     DeviceReportView reportView = new DeviceReportView();
 
     reportView.setDeveloperId(map.get("developerId").toString());
-    reportView.setDeviceDefinitionId(map.get("definitionId").toString());
-    reportView.setTotalNumber((Integer) map.get("totalCount"));
+    reportView.setDeviceDefinitionId(map.get("productId").toString());
+    reportView.setTotalNumber((Long) map.get("totalCount"));
 
     // TODO: 17/6/16 
     reportView.setOnlineNumber(0);

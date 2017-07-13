@@ -71,9 +71,10 @@ public class DeviceApplication {
 
     // 0. unionId 是否存在
     UnionDevice unionDevice = unionDeviceService.findOne(draft.getUnionId());
-    if (unionDevice == null) {
-      logger.debug("Device: {} does not exist.", draft.getUnionId());
-      throw new NotExistException("Device not exist");
+    if (!unionDevice.getProductId().equals(draft.getProductId())) {
+      logger.debug("Device: {} not belong to the kind of product: {}.", draft.getUnionId(), draft
+          .getProductId());
+      throw new NotExistException("Device not belong to the product.");
     }
 
     String developerId = unionDevice.getDeveloperId();
