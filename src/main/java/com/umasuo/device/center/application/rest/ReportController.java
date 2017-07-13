@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,12 +33,13 @@ public class ReportController {
    * Gets report by time.
    *
    * @param startTime the start time
-   * @param endTime the end time
+   * @param endTime   the end time
    * @return the report by time
    */
   @GetMapping(value = Router.REPORT_ROOT, params = {"startTime", "endTime"})
-  public List<DeviceReportView> getPeriodReport(@RequestParam("startTime") long startTime,
-      @RequestParam("endTime") long endTime) {
+  public @ResponseBody
+  List<DeviceReportView> getPeriodReport(@RequestParam("startTime") long startTime,
+                                         @RequestParam("endTime") long endTime) {
     LOG.info("Enter. startTime: {}, endTime: {}.", startTime, endTime);
 
     List<DeviceReportView> reports = reportApplication.getPeriodReport(startTime, endTime);
@@ -51,12 +53,13 @@ public class ReportController {
    * Gets report by time.
    *
    * @param developerId the developer id
-   * @param startTime the start time
+   * @param startTime   the start time
    * @return the report by time
    */
   @GetMapping(value = Router.REPORT_ROOT, params = {"startTime"})
-  public List<DeviceReportView> getDeveloperReport(@RequestHeader String developerId,
-      @RequestParam("startTime") long startTime) {
+  public @ResponseBody
+  List<DeviceReportView> getDeveloperReport(@RequestHeader String developerId,
+                                            @RequestParam("startTime") long startTime) {
     LOG.info("Enter. developerId: {}, startTime: {}.", developerId, startTime);
 
     List<DeviceReportView> reports = reportApplication

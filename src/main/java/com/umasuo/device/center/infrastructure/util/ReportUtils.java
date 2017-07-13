@@ -43,7 +43,7 @@ public final class ReportUtils {
   private static void handleRegisterReport(List<DeviceReportView> result, HashMap map) {
     Consumer<DeviceReportView> consumer = deviceReportView -> {
       if (deviceReportView.getDeveloperId().equals(map.get("developerId").toString()) &&
-          deviceReportView.getDeviceDefinitionId().equals(map.get("definitionId").toString())) {
+          deviceReportView.getDeviceDefinitionId().equals(map.get("productId").toString())) {
         deviceReportView.setRegisterNumber(Integer.valueOf(map.get("registerCount").toString()));
       }
     };
