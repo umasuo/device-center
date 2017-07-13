@@ -58,7 +58,7 @@ public class TokenApplication {
     String token = (String) redisTemplate.opsForValue().get(key);
     if (StringUtils.isBlank(token)) {
       token = RandomStringUtils.randomAlphanumeric(TOKEN_LENGTH);
-      redisTemplate.opsForValue().set(key, token, EXPIRE_TIME, TimeUnit.SECONDS);
+      redisTemplate.opsForValue().set(key, token, EXPIRE_TIME, TimeUnit.MINUTES);
     }
 
     logger.debug("Exit. token: {}.", token);
@@ -72,7 +72,7 @@ public class TokenApplication {
    * @param token
    */
   public void validateToken(String userId, String token) {
-    logger.debug("Enter. userId: {}, token: {}.");
+    logger.debug("Enter. userId: {}, token: {}.", userId, token);
 
     String key = USER_DEVICE_TOKEN_PREFIX + userId;
     String requestToken = (String) redisTemplate.opsForValue().get(key);
