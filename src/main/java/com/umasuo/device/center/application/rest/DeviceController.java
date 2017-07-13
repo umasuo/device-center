@@ -131,6 +131,7 @@ public class DeviceController {
     return device;
   }
 
+  // TODO: 17/7/13 查询参数， 分页，排序
   @GetMapping(value = Router.DEVICE_CENTER_ROOT)
   public List<DeviceData> getDeviceData(@RequestHeader String developerId) {
     logger.info("Enter. developerId: {}.", developerId);
