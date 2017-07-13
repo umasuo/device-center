@@ -42,7 +42,7 @@ public final class DeviceDataMapper {
     model.setStatus(device.getStatus());
     model.setActivateTime(device.getCreatedAt());
 
-    if (device.getStatus().equals(DeviceStatus.BIND)) {
+    if (DeviceStatus.BIND.equals(device.getStatus())) {
       model.setBindTime(device.getLastModifiedAt());
     } else {
       model.setUnbindTime(device.getLastModifiedAt());
