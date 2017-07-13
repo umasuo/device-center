@@ -1,6 +1,8 @@
 package com.umasuo.device.center.application.service;
 
+import com.google.common.collect.Lists;
 import com.umasuo.device.center.application.dto.DeviceActivateResult;
+import com.umasuo.device.center.application.dto.DeviceData;
 import com.umasuo.device.center.application.dto.DeviceDraft;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.application.dto.mapper.DeviceMapper;
@@ -217,5 +219,22 @@ public class DeviceApplication {
     logger.debug("Exit. device: {}.", result);
 
     return result;
+  }
+
+  /**
+   * 获取设备的运营数据。
+   *
+   * @param developerId
+   * @return
+   */
+  public List<DeviceData> getDeviceData(String developerId) {
+    // TODO: 17/7/13  
+    logger.debug("Enter. developerId: {}.", developerId);
+
+    List<DeviceData> deviceData = Lists.newArrayList();
+
+    logger.debug("Exit. deviceData size: {}.", deviceData.size());
+
+    return deviceData;
   }
 }
