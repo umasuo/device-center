@@ -1,12 +1,10 @@
 package com.umasuo.device.center.application.rest;
 
-import com.google.api.client.util.Lists;
 import com.umasuo.device.center.application.dto.DeviceActivateResult;
 import com.umasuo.device.center.application.dto.DeviceData;
 import com.umasuo.device.center.application.dto.DeviceDraft;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.application.service.DeviceApplication;
-import com.umasuo.device.center.application.service.MessageApplication;
 import com.umasuo.device.center.infrastructure.Router;
 
 import org.slf4j.Logger;
@@ -137,7 +135,7 @@ public class DeviceController {
   public List<DeviceData> getDeviceData(@RequestHeader String developerId) {
     logger.info("Enter. developerId: {}.", developerId);
 
-    List<DeviceData> deviceData = Lists.newArrayList();
+    List<DeviceData> deviceData = deviceApplication.getDeviceData(developerId);
 
     logger.info("Exit. deviceData size: {}.", deviceData.size());
 
