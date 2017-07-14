@@ -42,6 +42,12 @@ public class MessageApplication implements CommandLineRunner {
   private static final String DEVICE_TOPIC_SUB_PREFIX = "device/sub/";
   private static final String DEVICE_TOPIC_PUB_PREFIX = "device/pub/";
 
+  private static final String USER_TOPIC_SUB_PREFIX = "user/sub/";
+  private static final String USER_TOPIC_PUB_PREFIX = "user/pub/";
+
+  /**
+   * 所有此service监听的topic
+   */
   private List<Topic> topics = new ArrayList<>();
   /**
    * redis ops.
@@ -77,6 +83,7 @@ public class MessageApplication implements CommandLineRunner {
       mqtt.setHost(appConfig.msgBrokerHost, appConfig.getMsgBrokerPort());
       connection = mqtt.blockingConnection();
       connection.connect();
+      //todo service重启时，应该可以直接重新subscribe自己需要的topic
       logger.info("Connect to message broker: " + appConfig.getMsgBrokerHost());
     } catch (Exception e) {
       logger.error("Connect message broker failed.", e);
@@ -109,9 +116,9 @@ public class MessageApplication implements CommandLineRunner {
    * @param userId   用户ID
    */
   public void publish(String deviceId, String userId, DeviceMessage message) {
-    logger.debug("Enter. deviceId: {}, userId: {}.", deviceId, userId);
+    logger.debug("Enter. deviceId: {}, userId: {}, message: {}.", deviceId, userId, message);
     //组织每个用户的App只订阅自己的那一个topic,对topic内容的解析交给程序自己
-    String topic = "user:" + userId;
+    String topic = DEVICE_TOPIC_SUB_PREFIX + deviceId;
     String msg = JsonUtils.serialize(message);
     publish(topic, msg.getBytes(), QoS.AT_LEAST_ONCE, false);
   }
@@ -141,6 +148,14 @@ public class MessageApplication implements CommandLineRunner {
       throw new SubDeviceTopicException("Subscribe device topic failed. deviceId : " + username);
     }
 
+  }
+
+
+  /**
+   * 发送消息到用户的队列里面去.
+   */
+  public void publishUserMessage() {
+// TODO: 17/7/14
   }
 
   /**

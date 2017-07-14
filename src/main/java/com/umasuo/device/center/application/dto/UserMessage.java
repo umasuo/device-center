@@ -6,28 +6,38 @@ import java.io.Serializable;
 
 /**
  * Created by umasuo on 17/7/14.
+ * 用户的消息格式.
  */
 @Data
-public class DeviceMessage implements Serializable {
+public class UserMessage implements Serializable {
 
   private static final long serialVersionUID = 9190245794314412899L;
 
-  private int type;
+  /**
+   * 用户ID，非空
+   */
+  private String userId;
 
+  /**
+   * 消息时间.
+   */
   private long t;
 
+  /**
+   * 设备ID，可空.
+   */
   private String deviceId;
 
   private Content content;
 
   @Data
-  class Content implements Serializable{
+  class Content implements Serializable {
 
     private static final long serialVersionUID = -7158942951264289765L;
     /**
-     * 设备活着数据功能点ID.
+     * 消息类型
      */
-    private String id;
+    private String type;
 
     /**
      * 具体数据，json字符串活着具体数值.

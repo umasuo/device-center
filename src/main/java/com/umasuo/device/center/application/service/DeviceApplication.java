@@ -112,7 +112,7 @@ public class DeviceApplication {
 
     //为设备添加权限.
     messageApplication.addDeviceUser(result.getDeviceId(), result.getPublicKey());
-    // todo 发布消息通知客户端
+    // todo 发布消息通知客户端设备已经激活
 //    messageApplication.publish(result.getDeviceId(), userId);
     //更新设备的session
     sessionApplication.updateSession(device);
