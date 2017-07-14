@@ -1,7 +1,6 @@
 package com.umasuo.device.center.application.rest;
 
 import com.umasuo.device.center.application.dto.DeviceActivateResult;
-import com.umasuo.device.center.application.dto.DeviceData;
 import com.umasuo.device.center.application.dto.DeviceDraft;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.application.service.DeviceApplication;
@@ -38,14 +37,10 @@ public class DeviceController {
 
   /**
    * 激活设备。
-   *
-   * @param userId
-   * @param draft
-   * @return
    */
   @PostMapping(Router.DEVICE_CENTER_ROOT)
   public DeviceActivateResult activate(@RequestHeader("userId") String userId,
-                                       @RequestBody @Valid DeviceDraft draft) {
+      @RequestBody @Valid DeviceDraft draft) {
     logger.info("Enter. deviceDraft: {}.", draft);
 
     DeviceActivateResult result = deviceApplication.activate(draft, userId);
@@ -56,13 +51,10 @@ public class DeviceController {
 
   /**
    * 解除用户与设备的绑定关系。
-   *
-   * @param userId
-   * @param deviceId
    */
   @DeleteMapping(Router.DEVICE_CENTER_WITH_ID)
   public void unbind(@RequestHeader("userId") String userId,
-                     @PathVariable("id") String deviceId) {
+      @PathVariable("id") String deviceId) {
     logger.info("Enter. userId: {}, deviceId: {}.", userId, deviceId);
 
     deviceApplication.unbind(userId, deviceId);
@@ -73,15 +65,15 @@ public class DeviceController {
   /**
    * get device by device id.
    *
-   * @param id          String device id
-   * @param userId      the user id
+   * @param id String device id
+   * @param userId the user id
    * @param developerId the developer id
    * @return DeviceView device
    */
   @GetMapping(Router.DEVICE_CENTER_WITH_ID)
   public DeviceView getDevice(@PathVariable String id,
-                              @RequestHeader(required = false) String userId,
-                              @RequestHeader String developerId) {
+      @RequestHeader(required = false) String userId,
+      @RequestHeader String developerId) {
     logger.info("Enter. deviceId: {}.", id);
 
     DeviceView view = deviceApplication.getByDeviceId(id, developerId, userId);
@@ -93,13 +85,13 @@ public class DeviceController {
   /**
    * 获取用户在某个开发者下的所有设备.
    *
-   * @param userId      String
+   * @param userId String
    * @param developerId String in header
    * @return list of device view
    */
   @GetMapping(value = Router.DEVICE_CENTER_ROOT, headers = {"userId", "developerId"})
   public List<DeviceView> getAllDeviceByUser(@RequestHeader String userId,
-                                             @RequestHeader String developerId) {
+      @RequestHeader String developerId) {
     logger.info("Enter. userId: {}, developerId: {}.", userId, developerId);
 
     List<DeviceView> views = deviceApplication.getByUserAndDeveloper(userId, developerId);
@@ -111,15 +103,15 @@ public class DeviceController {
   /**
    * Gets device by definition.
    *
-   * @param userId             the user id
+   * @param userId the user id
    * @param deviceDefinitionId the device definition id
-   * @param developerId        the developer id
+   * @param developerId the developer id
    * @return the device by definition
    */
   @GetMapping(value = Router.DEVICE_CENTER_ROOT, params = {"userId", "deviceDefinitionId"})
   public DeviceView getDeviceByDefinition(@RequestParam String userId,
-                                          @RequestParam String deviceDefinitionId, @RequestHeader
-                                              String developerId) {
+      @RequestParam String deviceDefinitionId, @RequestHeader
+      String developerId) {
     logger.info("Enter. userId: {}, developerId: {}, deviceDefinitionId: {}.",
         userId, developerId, deviceDefinitionId);
 
@@ -129,16 +121,5 @@ public class DeviceController {
     logger.info("Exit. device: {}.", device);
 
     return device;
-  }
-
-  @GetMapping(value = Router.DEVICE_CENTER_ROOT)
-  public List<DeviceData> getDeviceData(@RequestHeader String developerId) {
-    logger.info("Enter. developerId: {}.", developerId);
-
-    List<DeviceData> deviceData = deviceApplication.getDeviceData(developerId);
-
-    logger.info("Exit. deviceData size: {}.", deviceData.size());
-
-    return deviceData;
   }
 }

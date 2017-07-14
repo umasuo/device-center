@@ -22,9 +22,9 @@ public class DeviceData {
 
   private DeviceStatus status;
 
-  private long activateTime;
+  private Long activateTime;
 
-  private long bindTime;
+  private Long bindTime;
 
-  private long unbindTime;
+  private Long unbindTime;
 }

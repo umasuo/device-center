@@ -5,6 +5,7 @@ import com.umasuo.device.center.application.dto.DeviceActivateResult;
 import com.umasuo.device.center.application.dto.DeviceData;
 import com.umasuo.device.center.application.dto.DeviceDraft;
 import com.umasuo.device.center.application.dto.DeviceView;
+import com.umasuo.device.center.application.dto.mapper.DeviceDataMapper;
 import com.umasuo.device.center.application.dto.mapper.DeviceMapper;
 import com.umasuo.device.center.domain.model.Device;
 import com.umasuo.device.center.domain.model.UnionDevice;
@@ -228,10 +229,12 @@ public class DeviceApplication {
    * @return
    */
   public List<DeviceData> getDeviceData(String developerId) {
-    // TODO: 17/7/13  
     logger.debug("Enter. developerId: {}.", developerId);
 
-    List<DeviceData> deviceData = Lists.newArrayList();
+    List<Device> devices = deviceService.getByDeveloper(developerId);
+
+    List<DeviceData> deviceData = DeviceDataMapper.toModel(devices);
+    // TODO: 17/7/13 获取用户手机和产品名称
 
     logger.debug("Exit. deviceData size: {}.", deviceData.size());
 

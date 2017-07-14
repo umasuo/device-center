@@ -258,4 +258,17 @@ public class DeviceService {
 
     return result;
   }
+
+  public List<Device> getByDeveloper(String developerId) {
+    logger.debug("Enter. developerId: {}.", developerId);
+    Device sample = new Device();
+    sample.setDeveloperId(developerId);
+
+    Example<Device> example = Example.of(sample);
+    List<Device> devices = deviceRepository.findAll(example);
+
+    logger.debug("Exit. device size: {}.", devices.size());
+
+    return devices;
+  }
 }
