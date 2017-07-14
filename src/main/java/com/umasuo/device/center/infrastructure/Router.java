@@ -30,4 +30,6 @@ public class Router {
   public static final String UNION_ROOT = DEVICE_CENTER_ROOT + "/unions";
 
   public static final String DEVICE_DATA = DEVICE_CENTER_ROOT + "/data";
+
+  public static final String UNION_ROOT_REGISTER = UNION_ROOT + "/register";
 }

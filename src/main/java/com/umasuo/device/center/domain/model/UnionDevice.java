@@ -27,8 +27,6 @@ import javax.persistence.Version;
 public class UnionDevice {
 
   @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
   @Column(name = "union_id")
   private String unionId;
 

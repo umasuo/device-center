@@ -2,6 +2,7 @@ package com.umasuo.device.center.application.rest;
 
 import com.umasuo.device.center.application.dto.UnionDeviceRequest;
 import com.umasuo.device.center.application.dto.UnionDeviceView;
+import com.umasuo.device.center.application.dto.UnionRegisterRequest;
 import com.umasuo.device.center.application.dto.mapper.UnionMapper;
 import com.umasuo.device.center.domain.model.UnionDevice;
 import com.umasuo.device.center.domain.service.UnionDeviceService;
@@ -45,5 +46,17 @@ public class UnionDeviceController {
 
     logger.info("Exit. unionSize: {}.", unions.size());
     return UnionMapper.toView(unions);
+  }
+
+  @PostMapping(Router.UNION_ROOT_REGISTER)
+  public UnionDeviceView register(@RequestHeader("developerId") String developerId,
+      @RequestBody @Valid UnionRegisterRequest request) {
+    logger.info("Enter. developerId: {}, request: {}.", developerId, request);
+
+    UnionDeviceView unionDeviceView = unionDeviceService.register(developerId, request);
+
+    logger.debug("Exit. unionDevice: {}.", unionDeviceView);
+
+    return unionDeviceView;
   }
 }
