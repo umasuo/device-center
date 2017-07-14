@@ -1,12 +1,10 @@
 package com.umasuo.device.center.application.rest;
 
 import com.umasuo.device.center.application.dto.DeviceActivateResult;
-import com.umasuo.device.center.application.dto.DeviceData;
 import com.umasuo.device.center.application.dto.DeviceDraft;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.application.service.DeviceApplication;
 import com.umasuo.device.center.infrastructure.Router;
-import com.umasuo.device.center.infrastructure.enums.DeviceStatus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,25 +121,5 @@ public class DeviceController {
     logger.info("Exit. device: {}.", device);
 
     return device;
-  }
-
-  // TODO: 17/7/13 查询参数， 分页，排序
-  @GetMapping(value = Router.DEVICE_CENTER_ROOT,
-      params = {"productId", "status", "phone", "unionId", "deviceId"})
-  public List<DeviceData> getDeviceData(@RequestHeader String developerId,
-      @RequestParam(required = false) String productId,
-      @RequestParam(required = false) DeviceStatus status,
-      @RequestParam(required = false) String phone,
-      @RequestParam(required = false) String unionId,
-      @RequestParam(required = false) String deviceId) {
-    logger.info(
-        "Enter. developerId: {}, productId: {}, status: {}, phone: {}, unionId: {}, deviceId: {}.",
-        developerId, productId, status, phone, unionId, deviceId);
-
-    List<DeviceData> deviceData = deviceApplication.getDeviceData(developerId);
-
-    logger.info("Exit. deviceData size: {}.", deviceData.size());
-
-    return deviceData;
   }
 }
