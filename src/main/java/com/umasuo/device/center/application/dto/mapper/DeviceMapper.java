@@ -26,7 +26,6 @@ public class DeviceMapper {
 
   public static DeviceView toView(Device device) {
     DeviceView deviceView = new DeviceView();
-    deviceView.setId(device.getId());
     deviceView.setCreatedAt(device.getCreatedAt());
     deviceView.setLastModifiedAt(device.getLastModifiedAt());
     deviceView.setVersion(device.getVersion());
@@ -57,7 +56,6 @@ public class DeviceMapper {
     device.setUnionId(draft.getUnionId());
     device.setProductId(draft.getProductId());
     device.setPublicKey(RandomStringUtils.randomAlphanumeric(9));
-    device.setDeviceId(UUID.randomUUID().toString());
 
     return device;
   }

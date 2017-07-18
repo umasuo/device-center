@@ -57,6 +57,7 @@ public class DeviceService {
 
     Device device = deviceRepository.findOne(id);
     if (device == null) {
+      logger.debug("Device: {} not exist.", id);
       throw new NotExistException("Device not exist for id: " + id);
     }
     logger.debug("Exit. device: {}.", id);

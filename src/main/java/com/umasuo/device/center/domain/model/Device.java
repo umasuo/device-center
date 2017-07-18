@@ -29,7 +29,7 @@ public class Device {
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")
   @Column(name = "id")
-  private String id;
+  private String deviceId;
 
   /**
    * The Created at.
@@ -72,8 +72,6 @@ public class Device {
   private String ownerId;
 
   private String publicKey;
-
-  private String deviceId;
 
   private DeviceStatus status;
 }
