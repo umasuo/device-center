@@ -1,9 +1,11 @@
 package com.umasuo.device.center.application.service;
 
+import com.umasuo.device.center.application.dto.DeviceMessage;
 import com.umasuo.device.center.infrastructure.configuration.AppConfig;
 import com.umasuo.device.center.infrastructure.exception.GeneratePasswordException;
 import com.umasuo.device.center.infrastructure.exception.SubDeviceTopicException;
 import com.umasuo.device.center.infrastructure.util.DevicePasswordUtils;
+import com.umasuo.device.center.infrastructure.util.JsonUtils;
 import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.Message;
@@ -40,6 +42,12 @@ public class MessageApplication implements CommandLineRunner {
   private static final String DEVICE_TOPIC_SUB_PREFIX = "device/sub/";
   private static final String DEVICE_TOPIC_PUB_PREFIX = "device/pub/";
 
+  private static final String USER_TOPIC_SUB_PREFIX = "user/sub/";
+  private static final String USER_TOPIC_PUB_PREFIX = "user/pub/";
+
+  /**
+   * 所有此service监听的topic
+   */
   private List<Topic> topics = new ArrayList<>();
   /**
    * redis ops.
@@ -63,6 +71,7 @@ public class MessageApplication implements CommandLineRunner {
     this.appConfig = appConfig;
     this.redisTemplate = redisTemplate;
     this.deviceMessageHandler = deviceMessageHandler;
+    //自动添加用户名密码，保证其可以
     redisTemplate.boundHashOps(USERNAME_PREFIX + appConfig.getUsername()).put("password",
         appConfig.getPassword());
 
@@ -71,9 +80,10 @@ public class MessageApplication implements CommandLineRunner {
     mqtt.setPassword(appConfig.getPassword());
 
     try {
-      mqtt.setHost(appConfig.msgBrokerHost,appConfig.getMsgBrokerPort());
+      mqtt.setHost(appConfig.msgBrokerHost, appConfig.getMsgBrokerPort());
       connection = mqtt.blockingConnection();
       connection.connect();
+      //todo service重启时，应该可以直接重新subscribe自己需要的topic
       logger.info("Connect to message broker: " + appConfig.getMsgBrokerHost());
     } catch (Exception e) {
       logger.error("Connect message broker failed.", e);
@@ -100,16 +110,17 @@ public class MessageApplication implements CommandLineRunner {
   }
 
   /**
-   * @param deviceId
-   * @param userId
+   * 下发一条message到设备上.
+   *
+   * @param deviceId 设备ID
+   * @param userId   用户ID
    */
-  public void publish(String deviceId, String userId) {
-    logger.debug("Enter. deviceId: {}, userId: {}.", deviceId, userId);
-    // 组织每个用户的App只订阅自己的那一个topic,对topic内容的解析交给程序自己
-    String topic = "user:" + userId;
-    //TODO 根据一定规则定义message的内容,例如前5个字符表示code，后面表示这次传递的内容.
-    String message = "10001:" + deviceId;
-    publish(topic, message.getBytes(), QoS.AT_LEAST_ONCE, false);
+  public void publish(String deviceId, String userId, DeviceMessage message) {
+    logger.debug("Enter. deviceId: {}, userId: {}, message: {}.", deviceId, userId, message);
+    //组织每个用户的App只订阅自己的那一个topic,对topic内容的解析交给程序自己
+    String topic = DEVICE_TOPIC_SUB_PREFIX + deviceId;
+    String msg = JsonUtils.serialize(message);
+    publish(topic, msg.getBytes(), QoS.AT_LEAST_ONCE, false);
   }
 
   /**
@@ -130,13 +141,21 @@ public class MessageApplication implements CommandLineRunner {
       connection.subscribe(topics.toArray(new Topic[topics.size()]));
       BoundHashOperations setOperations = redisTemplate.boundHashOps(USERNAME_PREFIX + username);
       //TODO MQTT 的的密码需要采用加密模式
-      //这里其实需要考虑redis失效的场景
+      //TODO 这里其实需要考虑redis失效的场景
       setOperations.put("password", password);
     } catch (Exception e) {
       logger.error("Subscribe device topic failed. deviceId : {}", username);
       throw new SubDeviceTopicException("Subscribe device topic failed. deviceId : " + username);
     }
 
+  }
+
+
+  /**
+   * 发送消息到用户的队列里面去.
+   */
+  public void publishUserMessage() {
+// TODO: 17/7/14
   }
 
   /**
@@ -154,7 +173,6 @@ public class MessageApplication implements CommandLineRunner {
         String topic = message.getTopic();//从这里可以获得deviceID，
         String deviceId = topic.substring(DEVICE_TOPIC_PUB_PREFIX.length() - 1);
         String payload = new String(message.getPayload());//从这里可以获取device上发的命令和数据
-
         boolean handlerResult = deviceMessageHandler.handler(deviceId, payload);
         if (handlerResult) {
           message.ack();
