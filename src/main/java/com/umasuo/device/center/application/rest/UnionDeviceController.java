@@ -4,8 +4,8 @@ import com.umasuo.device.center.application.dto.UnionDeviceRequest;
 import com.umasuo.device.center.application.dto.UnionDeviceView;
 import com.umasuo.device.center.application.dto.UnionRegisterRequest;
 import com.umasuo.device.center.application.dto.mapper.UnionMapper;
+import com.umasuo.device.center.application.service.UnionApplication;
 import com.umasuo.device.center.domain.model.UnionDevice;
-import com.umasuo.device.center.domain.service.UnionDeviceService;
 import com.umasuo.device.center.infrastructure.Router;
 
 import org.slf4j.Logger;
@@ -37,17 +37,17 @@ public class UnionDeviceController {
    * The application.
    */
   @Autowired
-  private UnionDeviceService unionDeviceService;
+  private UnionApplication unionApplication;
 
   @PostMapping(Router.UNION_ROOT)
   public List<UnionDeviceView> batchCreate(@RequestHeader("developerId") String developerId,
                                            @RequestBody @Valid UnionDeviceRequest request) {
     logger.info("Enter. developerId: {}, request: {}.", developerId, request);
 
-    List<UnionDevice> unions = unionDeviceService.batchCreate(developerId, request);
+    List<UnionDeviceView> unions = unionApplication.batchCreate(developerId, request);
 
     logger.info("Exit. unionSize: {}.", unions.size());
-    return UnionMapper.toView(unions);
+    return unions;
   }
 
   @PostMapping(Router.UNION_ROOT_REGISTER)
@@ -55,7 +55,7 @@ public class UnionDeviceController {
       @RequestBody @Valid UnionRegisterRequest request) {
     logger.info("Enter. developerId: {}, request: {}.", developerId, request);
 
-    UnionDeviceView unionDeviceView = unionDeviceService.register(developerId, request);
+    UnionDeviceView unionDeviceView = unionApplication.register(developerId, request);
 
     logger.debug("Exit. unionDevice: {}.", unionDeviceView);
 

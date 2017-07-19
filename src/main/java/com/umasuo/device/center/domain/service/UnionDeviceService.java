@@ -14,6 +14,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,43 +31,22 @@ public class UnionDeviceService {
    */
   private static final Logger LOG = LoggerFactory.getLogger(UnionDeviceService.class);
 
-  /**
-   * Token length.
-   */
-  private static final int SECRET_KEY_LENGTH = 7;
-
   @Autowired
   private transient UnionDeviceRepository repository;
 
   /**
-   * 批量新建union id.
+   * 批量保存union id.
    *
-   * @param developerId the developer id
-   * @param request     the quantity
+   * @param unionDevices list of union device
    * @return the list
    */
-  public List<UnionDevice> batchCreate(String developerId, UnionDeviceRequest request) {
-    LOG.debug("Enter. developerId: {}, request: {}.", developerId, request);
+  @Async
+  public void save(List<UnionDevice> unionDevices) {
+    LOG.debug("Enter. unionDevice size.", unionDevices.size());
 
-    List<UnionDevice> unionDevices = Lists.newArrayList();
-    //todo 检查product 是否存在
-
-    // todo 这将是一个漫长的请求
-    for (int i = 0; i < request.getQuantity(); i++) {
-      UnionDevice unionDevice = new UnionDevice();
-      unionDevice.setDeveloperId(developerId);
-      unionDevice.setProductId(request.getProductId());
-      unionDevice.setUnionId(UUID.randomUUID().toString());
-      // set a random secret key
-      unionDevice.setSecretKey(RandomStringUtils.randomAlphanumeric(SECRET_KEY_LENGTH));
-      unionDevices.add(unionDevice);
-    }
-
-    List<UnionDevice> result = repository.save(unionDevices);
+    repository.save(unionDevices);
 
     LOG.debug("Exit.");
-
-    return result;
   }
 
   /**
@@ -98,24 +78,14 @@ public class UnionDeviceService {
     return unionDevice;
   }
 
-  public UnionDeviceView register(String developerId, UnionRegisterRequest request) {
-    LOG.debug("Enter. developerId: {}, request: {}.", developerId, request);
-    UnionDevice unionDevice = new UnionDevice();
-    unionDevice.setDeveloperId(developerId);
-    // TODO: 17/7/14 检查product是否存在
-    unionDevice.setProductId(request.getProductId());
-    unionDevice.setSecretKey(RandomStringUtils.randomAlphanumeric(SECRET_KEY_LENGTH));
-    String unionId = UUID.randomUUID().toString();
-    unionDevice.setUnionId(unionId);
+  @Async
+  public UnionDevice save(UnionDevice unionDevice) {
+    LOG.debug("Enter. unionDevice: {}.", unionDevice);
 
-    if (isUnionIdExist(unionId)) {
-      LOG.debug("unionId: {} is already exist.", unionId);
-      throw new AlreadyExistException("UnionId is already exist");
-    }
+    UnionDevice savedUnionDevice = repository.save(unionDevice);
 
-    repository.save(unionDevice);
+    LOG.debug("Exit.");
 
-    LOG.debug("Exit. unionDevice: {}.", unionDevice);
-    return UnionMapper.toView(unionDevice);
+    return savedUnionDevice;
   }
 }
