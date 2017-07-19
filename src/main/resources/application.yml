@@ -26,3 +26,7 @@ message:
     port: 1883
     username: username
     password: password
+
+product:
+  service:
+    url: http://localhost:8805/

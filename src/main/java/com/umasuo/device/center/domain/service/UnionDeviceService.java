@@ -49,6 +49,17 @@ public class UnionDeviceService {
     LOG.debug("Exit.");
   }
 
+  @Async
+  public UnionDevice save(UnionDevice unionDevice) {
+    LOG.debug("Enter. unionDevice: {}.", unionDevice);
+
+    UnionDevice savedUnionDevice = repository.save(unionDevice);
+
+    LOG.debug("Exit.");
+
+    return savedUnionDevice;
+  }
+
   /**
    * 判断union id是否存在
    *
@@ -76,16 +87,5 @@ public class UnionDeviceService {
     LOG.debug("Exit. unionDevice: {}.", unionDevice);
 
     return unionDevice;
-  }
-
-  @Async
-  public UnionDevice save(UnionDevice unionDevice) {
-    LOG.debug("Enter. unionDevice: {}.", unionDevice);
-
-    UnionDevice savedUnionDevice = repository.save(unionDevice);
-
-    LOG.debug("Exit.");
-
-    return savedUnionDevice;
   }
 }
