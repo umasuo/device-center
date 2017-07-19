@@ -15,9 +15,6 @@ public class UnionMapper {
     UnionDeviceView view = new UnionDeviceView();
 
     view.setUnionId(entity.getUnionId());
-    view.setCreatedAt(entity.getCreatedAt());
-    view.setDeveloperId(entity.getDeveloperId());
-    view.setProductId(entity.getProductId());
     view.setSecretKey(entity.getSecretKey());
 
     return view;
