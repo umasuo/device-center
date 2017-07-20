@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 /**
  * Created by umasuo on 17/7/14.
+ * 目前为止，消息由APP直接处理，服务端不进行消息的处理.
  */
 @Data
 public class DeviceMessage implements Serializable {
@@ -21,7 +22,7 @@ public class DeviceMessage implements Serializable {
   private Content content;
 
   @Data
-  class Content implements Serializable{
+  public class Content implements Serializable {
 
     private static final long serialVersionUID = -7158942951264289765L;
     /**

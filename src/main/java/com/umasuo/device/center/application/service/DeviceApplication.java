@@ -1,6 +1,5 @@
 package com.umasuo.device.center.application.service;
 
-import com.google.common.collect.Lists;
 import com.umasuo.device.center.application.dto.DeviceActivateResult;
 import com.umasuo.device.center.application.dto.DeviceData;
 import com.umasuo.device.center.application.dto.DeviceDraft;
@@ -96,7 +95,6 @@ public class DeviceApplication {
 
     // 4. 新建device信息，并且与userId绑定
     Device device = deviceService.findByUserAndUnionId(userId, draft.getUnionId());
-
     if (device == null) {
       device = DeviceMapper.build(draft, userId, developerId);
     }
@@ -105,14 +103,10 @@ public class DeviceApplication {
     device.setStatus(DeviceStatus.BIND);
     deviceService.save(device);
 
-    // 6. 保存deviceId为key，publicKey为value的redis数据,public key也是mqtt中的密码来源
-    redisTemplate.opsForValue().set(DEVICE_PUBLIC_KEY_PREFIX + device.getDeviceId(),
-        device.getPublicKey());
-
     DeviceActivateResult result = DeviceActivateResult.build(device);
 
-    //为设备添加权限.
-    messageApplication.addDeviceUser(result.getDeviceId(), result.getPublicKey());
+    //添加MQTT的用户名和密码
+    messageApplication.addMqttUser(result.getDeviceId(), result.getPublicKey());
     // todo 发布消息通知客户端设备已经激活
 //    messageApplication.publish(result.getDeviceId(), userId);
     //更新设备的session

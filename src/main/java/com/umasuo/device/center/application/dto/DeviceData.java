@@ -1,7 +1,6 @@
 package com.umasuo.device.center.application.dto;
 
 import com.umasuo.device.center.infrastructure.enums.DeviceStatus;
-
 import lombok.Data;
 
 /**

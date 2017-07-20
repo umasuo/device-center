@@ -37,10 +37,10 @@ public class UserMessage implements Serializable {
     /**
      * 消息类型
      */
-    private String type;
+    private String id;
 
     /**
-     * 具体数据，json字符串活着具体数值.
+     * 具体数据，json字符串或者具体数值.
      */
     private String data;
   }
