@@ -88,8 +88,9 @@ public class DeviceApplication {
       throw new AlreadyBoundException("Device has bean bound");
     }
 
+    // 暂时不需要token，先去掉
     // 2. 检查userId和token是否匹配
-    tokenApplication.validateToken(userId, draft.getToken());
+//    tokenApplication.validateToken(userId, draft.getToken());
 
     //TODO 3. 根据userId获取developerId
 

@@ -26,6 +26,9 @@ public class DeviceDraft implements Serializable {
   @NotNull
   private String unionId;
 
-  @NotNull
+  /**
+   * 暂时不需要token，先去掉。
+   */
+//  @NotNull
   private String token;
 }
