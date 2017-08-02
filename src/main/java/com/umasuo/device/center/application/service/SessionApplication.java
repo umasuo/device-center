@@ -26,6 +26,17 @@ public class SessionApplication {
   @Autowired
   private transient RedisTemplate redisTemplate;
 
+  public Session getSession(String deviceId) {
+    String developerId = (String) redisTemplate.boundValueOps(DEVICE_KEY + ":" + deviceId).get();
+    String deviceKey = DEVICE_KEY + developerId + ":" + deviceId;
+    return (Session) redisTemplate.boundHashOps(deviceKey).get(SESSION_KEY);
+  }
+
+  /**
+   * 更新device session.
+   *
+   * @param device Device
+   */
   public void updateSession(Device device) {
     String deviceId = device.getDeviceId();
     String developerId = device.getDeveloperId();
@@ -37,14 +48,29 @@ public class SessionApplication {
     DeviceView view = DeviceMapper.toView(device);
     session.setDevice(view);
     redisTemplate.boundHashOps(deviceKey).put(SESSION_KEY, session);
+    redisTemplate.boundValueOps(DEVICE_KEY + ":" + deviceId).set(developerId);
+
+    // TODO: 17/7/20 顺便更新设备的MQTT值
   }
 
+  /**
+   * 清楚设备的session.
+   *
+   * @param developerId
+   * @param deviceId
+   */
   public void clearSession(String developerId, String deviceId) {
     // clear session
     String deviceKey = DEVICE_KEY + developerId + ":" + deviceId;
     redisTemplate.boundHashOps(deviceKey).delete(SESSION_KEY);
   }
 
+  /**
+   * 获取或创建新的设备session.
+   *
+   * @param deviceKey
+   * @return
+   */
   private Session getOrCreate(String deviceKey) {
     //get session or create if not exists
     Session session = (Session) redisTemplate.boundHashOps(deviceKey).get(SESSION_KEY);

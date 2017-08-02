@@ -1,10 +1,7 @@
 package com.umasuo.device.center.application.dto;
 
 import com.umasuo.device.center.infrastructure.enums.ProductStatus;
-
 import lombok.Data;
-
-import java.util.List;
 
 /**
  * Created by Davis on 17/7/19.

@@ -129,33 +129,26 @@ public class MessageApplication implements CommandLineRunner {
    * @param username  用户名为设备的ID
    * @param publicKey password 为下发到设备的token
    */
-  public void addDeviceUser(String username, String publicKey) {
+  public void addMqttUser(String username, String publicKey) {
     logger.debug("Add broker user: {}.", username);
-
     try {
       String password = DevicePasswordUtils.getPassword(publicKey);
       if (password == null) {
         throw new GeneratePasswordException("Generate device password failed.");
       }
-      topics.add(new Topic(DEVICE_TOPIC_PUB_PREFIX + username, QoS.AT_LEAST_ONCE));
+      Topic topic = new Topic(DEVICE_TOPIC_PUB_PREFIX + username, QoS.AT_LEAST_ONCE);
+      topics.remove(topic);//如果已经存在，先移除，再重新添加
+      topics.add(topic);
+
       connection.subscribe(topics.toArray(new Topic[topics.size()]));
       BoundHashOperations setOperations = redisTemplate.boundHashOps(USERNAME_PREFIX + username);
       //TODO MQTT 的的密码需要采用加密模式
       //TODO 这里其实需要考虑redis失效的场景
-      setOperations.put("password", password);
+      setOperations.put("password", password);//添加用户名密码
     } catch (Exception e) {
-      logger.error("Subscribe device topic failed. deviceId : {}", username);
+      logger.error("Subscribe device topic failed. deviceId : {}", username, e);
       throw new SubDeviceTopicException("Subscribe device topic failed. deviceId : " + username);
     }
-
-  }
-
-
-  /**
-   * 发送消息到用户的队列里面去.
-   */
-  public void publishUserMessage() {
-// TODO: 17/7/14
   }
 
   /**
@@ -166,14 +159,12 @@ public class MessageApplication implements CommandLineRunner {
    */
   @Override
   public void run(String... args) throws Exception {
-    logger.info("start process data.");
+    logger.info("start process message.");
     while (true) {
       Message message = connection.receive();
       if (message != null) {
-        String topic = message.getTopic();//从这里可以获得deviceID，
-        String deviceId = topic.substring(DEVICE_TOPIC_PUB_PREFIX.length() - 1);
-        String payload = new String(message.getPayload());//从这里可以获取device上发的命令和数据
-        boolean handlerResult = deviceMessageHandler.handler(deviceId, payload);
+        String topic = message.getTopic();//从这里可以获得deviceID
+        boolean handlerResult = deviceMessageHandler.handler(topic, new String(message.getPayload()));
         if (handlerResult) {
           message.ack();
         }
