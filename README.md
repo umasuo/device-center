@@ -1,6 +1,6 @@
 
-# Commons service
-[![Build Status](https://travis-ci.org/reactivesw/commons.svg?branch=master)](https://travis-ci.org/reactivesw/commons)
+[![Build Status](https://travis-ci.org/umasuo/device-center.svg?branch=master)](https://travis-ci.org/umasuo/device-center)
+# device center service
 
 # 1 Introduction
 this project provide some tools that will be used in all services.
