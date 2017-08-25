@@ -122,4 +122,15 @@ public class DeviceController {
 
     return device;
   }
+
+  @GetMapping("/v1/admin/devices/count")
+  public Long countDevices() {
+    logger.info("Enter.");
+
+    Long count = deviceApplication.countDevices();
+
+    logger.debug("Exit. device count: {}.", count);
+
+    return count;
+  }
 }

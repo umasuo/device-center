@@ -235,4 +235,14 @@ public class DeviceApplication {
 
     return deviceData;
   }
+
+  public Long countDevices() {
+    logger.debug("Enter.");
+
+    Long count = deviceService.countDevices();
+
+    logger.debug("Exit. device count: {}.", count);
+
+    return count;
+  }
 }
