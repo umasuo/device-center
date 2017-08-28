@@ -272,4 +272,14 @@ public class DeviceService {
 
     return devices;
   }
+
+  public Long countDevices() {
+    logger.info("Enter.");
+
+    Long count = deviceRepository.count();
+
+    logger.debug("Exit. device count: {}.", count);
+
+    return count;
+  }
 }
