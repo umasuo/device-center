@@ -23,43 +23,59 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by umasuo on 17/6/27.
+ * Message application.
  */
 @Service
 public class MessageApplication implements CommandLineRunner {
+
   /**
    * Logger.
    */
-  private static final Logger logger = LoggerFactory.getLogger(MessageApplication.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(MessageApplication.class);
 
-  private transient AppConfig appConfig;
-
+  /**
+   * MQTT client.
+   */
   private transient MQTT mqtt;
 
+  /**
+   * MQTT client connection.
+   */
   private transient BlockingConnection connection;
 
+  /**
+   * MQTT user prefix.
+   */
   private static final String USERNAME_PREFIX = "mqtt_user:";
-  private static final String DEVICE_TOPIC_SUB_PREFIX = "device/sub/";
-  private static final String DEVICE_TOPIC_PUB_PREFIX = "device/pub/";
 
-  private static final String USER_TOPIC_SUB_PREFIX = "user/sub/";
-  private static final String USER_TOPIC_PUB_PREFIX = "user/pub/";
+  /**
+   * Device topic's prefix for device to sub.
+   */
+  private static final String DEVICE_TOPIC_SUB_PREFIX = "device/sub/";
+
+  /**
+   * Device topic's prefix for device to pub.
+   */
+  private static final String DEVICE_TOPIC_PUB_PREFIX = "device/pub/";
 
   /**
    * 所有此service监听的topic
    */
   private List<Topic> topics = new ArrayList<>();
+
   /**
    * redis ops.
    */
   private transient StringRedisTemplate redisTemplate;
 
-
+  /**
+   * Device message handler.
+   */
   private transient DeviceMessageHandler deviceMessageHandler;
 
 
   /**
-   * 初始化和message broker的连接.
+   * Init connection to MQTT.
    *
    * @param appConfig 系统配置
    */
@@ -68,7 +84,6 @@ public class MessageApplication implements CommandLineRunner {
                             DeviceMessageHandler deviceMessageHandler,
                             AppConfig appConfig
   ) {
-    this.appConfig = appConfig;
     this.redisTemplate = redisTemplate;
     this.deviceMessageHandler = deviceMessageHandler;
     //自动添加用户名密码，保证其可以
@@ -84,9 +99,9 @@ public class MessageApplication implements CommandLineRunner {
       connection = mqtt.blockingConnection();
       connection.connect();
       //todo service重启时，应该可以直接重新subscribe自己需要的topic
-      logger.info("Connect to message broker: " + appConfig.getMsgBrokerHost());
+      LOGGER.info("Connect to message broker: " + appConfig.getMsgBrokerHost());
     } catch (Exception e) {
-      logger.error("Connect message broker failed.", e);
+      LOGGER.error("Connect message broker failed.", e);
     }
   }
 
@@ -100,12 +115,12 @@ public class MessageApplication implements CommandLineRunner {
    */
   public void publish(final String topic, final byte[] payload, final QoS qos, final boolean
       retain) {
-    logger.debug("Enter. topic: {}, payload: {}, qos: {}, retain: {}.", topic, new String
+    LOGGER.debug("Enter. topic: {}, payload: {}, qos: {}, retain: {}.", topic, new String
         (payload), qos, retain);
     try {
       connection.publish(topic, payload, qos, retain);
     } catch (Exception e) {
-      logger.error("publish message failed.", e);
+      LOGGER.error("publish message failed.", e);
     }
   }
 
@@ -116,7 +131,7 @@ public class MessageApplication implements CommandLineRunner {
    * @param userId   用户ID
    */
   public void publish(String deviceId, String userId, DeviceMessage message) {
-    logger.debug("Enter. deviceId: {}, userId: {}, message: {}.", deviceId, userId, message);
+    LOGGER.debug("Enter. deviceId: {}, userId: {}, message: {}.", deviceId, userId, message);
     //组织每个用户的App只订阅自己的那一个topic,对topic内容的解析交给程序自己
     String topic = DEVICE_TOPIC_SUB_PREFIX + deviceId;
     String msg = JsonUtils.serialize(message);
@@ -130,7 +145,7 @@ public class MessageApplication implements CommandLineRunner {
    * @param publicKey password 为下发到设备的token
    */
   public void addMqttUser(String username, String publicKey) {
-    logger.debug("Add broker user: {}.", username);
+    LOGGER.debug("Add broker user: {}.", username);
     try {
       String password = DevicePasswordUtils.getPassword(publicKey);
       if (password == null) {
@@ -146,7 +161,7 @@ public class MessageApplication implements CommandLineRunner {
       //TODO 这里其实需要考虑redis失效的场景
       setOperations.put("password", password);//添加用户名密码
     } catch (Exception e) {
-      logger.error("Subscribe device topic failed. deviceId : {}", username, e);
+      LOGGER.error("Subscribe device topic failed. deviceId : {}", username, e);
       throw new SubDeviceTopicException("Subscribe device topic failed. deviceId : " + username);
     }
   }
@@ -159,12 +174,13 @@ public class MessageApplication implements CommandLineRunner {
    */
   @Override
   public void run(String... args) throws Exception {
-    logger.info("start process message.");
+    LOGGER.info("start process message.");
     while (true) {
       Message message = connection.receive();
       if (message != null) {
         String topic = message.getTopic();//从这里可以获得deviceID
-        boolean handlerResult = deviceMessageHandler.handler(topic, new String(message.getPayload()));
+        boolean handlerResult = deviceMessageHandler.handler(topic, new String(message.getPayload
+            ()));
         if (handlerResult) {
           message.ack();
         }
