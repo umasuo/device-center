@@ -18,23 +18,20 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * Created by umasuo on 17/6/5.
+ * Device application.
  */
 @Service
 public class DeviceApplication {
 
-  private final static Logger logger = LoggerFactory.getLogger(DeviceApplication.class);
-
   /**
-   * device publicKey prefix.
+   * Logger.
    */
-  private final static String DEVICE_PUBLIC_KEY_PREFIX = "device:public:key:";
+  private final static Logger LOGGER = LoggerFactory.getLogger(DeviceApplication.class);
 
   /**
    * device service.
@@ -43,23 +40,20 @@ public class DeviceApplication {
   private transient DeviceService deviceService;
 
   /**
-   * The Token application.
+   * Union device service.
    */
-  @Autowired
-  private TokenApplication tokenApplication;
-
   @Autowired
   private transient UnionDeviceService unionDeviceService;
 
   /**
-   * redis ops.
+   * Message app.
    */
-  @Autowired
-  private transient RedisTemplate redisTemplate;
-
   @Autowired
   private transient MessageApplication messageApplication;
 
+  /**
+   * Session app.
+   */
   @Autowired
   private transient SessionApplication sessionApplication;
 
@@ -69,34 +63,33 @@ public class DeviceApplication {
    * @param draft the draft
    */
   public DeviceActivateResult activate(DeviceDraft draft, String userId) {
-    logger.info("Enter. deviceDraft: {}.", draft);
+    LOGGER.info("Enter. deviceDraft: {}.", draft);
 
     // 0. unionId 是否存在
     UnionDevice unionDevice = unionDeviceService.findOne(draft.getUnionId());
     if (!unionDevice.getProductId().equals(draft.getProductId())) {
-      logger.debug("Device: {} not belong to the kind of product: {}.", draft.getUnionId(), draft
-          .getProductId());
+      LOGGER.debug("Device: {} not belong to the kind of product: {}.", draft.getUnionId(), draft
+        .getProductId());
       throw new NotExistException("Device not belong to the product.");
     }
 
-    String developerId = unionDevice.getDeveloperId();
 
     // 1. 根据unionId查询设备是否处于绑定状态
     if (deviceService.isDeviceBound(draft.getUnionId())) {
-      logger.debug("Device: {} has bean bound.", draft.getUnionId());
+      LOGGER.debug("Device: {} has bean bound.", draft.getUnionId());
       throw new AlreadyBoundException("Device has bean bound");
     }
 
     // 暂时不需要token，先去掉
     // 2. 检查userId和token是否匹配
 //    tokenApplication.validateToken(userId, draft.getToken());
-
+    String developerId = unionDevice.getDeveloperId();
     //TODO 3. 根据userId获取developerId
 
     // 4. 新建device信息，并且与userId绑定
     Device device = deviceService.findByUserAndUnionId(userId, draft.getUnionId());
     if (device == null) {
-      device = DeviceMapper.build(draft, userId, developerId);
+      device = DeviceMapper.toModel(draft, userId, developerId);
     }
 
     // 5. 修改设备状态为 绑定
@@ -122,12 +115,12 @@ public class DeviceApplication {
    * @param deviceId the device id
    */
   public void unbind(String userId, String deviceId) {
-    logger.debug("Enter. userId: {}, deviceId: {}.", userId, deviceId);
+    LOGGER.debug("Enter. userId: {}, deviceId: {}.", userId, deviceId);
 
     Device device = deviceService.findByUserAndDeviceId(userId, deviceId);
 
     if (device == null) {
-      logger.debug("User: {} does not have device: {}.", userId, deviceId);
+      LOGGER.debug("User: {} does not have device: {}.", userId, deviceId);
       throw new NotExistException("Can not find device");
     }
 
@@ -138,7 +131,7 @@ public class DeviceApplication {
 
     sessionApplication.clearSession(device.getDeveloperId(), device.getDeviceId());
 
-    logger.debug("Exit.");
+    LOGGER.debug("Exit.");
   }
 
   /**
@@ -150,26 +143,26 @@ public class DeviceApplication {
    * @return DeviceView by device id
    */
   public DeviceView getByDeviceId(String deviceId, String developerId, String userId) {
-    logger.debug("Enter. deviceId: {}.", deviceId);
+    LOGGER.debug("Enter. deviceId: {}.", deviceId);
 
     Device device = deviceService.get(deviceId);
 
     if (!device.getDeveloperId().equals(developerId)) {
-      logger.debug("Device: {} is not belong to developer: {}.", deviceId, developerId);
+      LOGGER.debug("Device: {} is not belong to developer: {}.", deviceId, developerId);
       throw new ParametersException("The device not belong to the developer: " + developerId + "," +
-          " deviceId: " + deviceId);
+        " deviceId: " + deviceId);
     }
 
     if (StringUtils.isNotBlank(userId) &&
-        !userId.equals(device.getOwnerId())) {
-      logger.debug("Device: {} is not belong to user: {}.", deviceId, userId);
+      !userId.equals(device.getOwnerId())) {
+      LOGGER.debug("Device: {} is not belong to user: {}.", deviceId, userId);
       throw new ParametersException("The device not belong to the user: " + userId + "," +
-          " deviceId: " + deviceId);
+        " deviceId: " + deviceId);
     }
 
     DeviceView view = DeviceMapper.toView(device);
 
-    logger.debug("Exit. deviceView: {}.", view);
+    LOGGER.debug("Exit. deviceView: {}.", view);
     return view;
   }
 
@@ -181,13 +174,13 @@ public class DeviceApplication {
    * @return 设备列表 by user and developer
    */
   public List<DeviceView> getByUserAndDeveloper(String userId, String developerId) {
-    logger.debug("Enter. userId: {}, developerId: {}.", userId, developerId);
+    LOGGER.debug("Enter. userId: {}, developerId: {}.", userId, developerId);
 
     List<Device> devices = deviceService.getByUserAndDeveloper(userId, developerId);
     List<DeviceView> views = DeviceMapper.toView(devices);
 
-    logger.debug("Exit. viewSize: {}.", views.size());
-    logger.trace("DeviceView: {}.", views);
+    LOGGER.debug("Exit. viewSize: {}.", views.size());
+    LOGGER.trace("DeviceView: {}.", views);
     return views;
   }
 
@@ -201,18 +194,18 @@ public class DeviceApplication {
    */
   public DeviceView getByUserAndDefinition(String userId, String developerId,
                                            String deviceDefinitionId) {
-    logger.debug("Enter. userId: {}, developerId: {}, deviceDefinitionId: {}.", userId, developerId,
-        deviceDefinitionId);
+    LOGGER.debug("Enter. userId: {}, developerId: {}, deviceDefinitionId: {}.", userId, developerId,
+      deviceDefinitionId);
 
     Device device = deviceService.getByUserAndDefinition(userId, developerId, deviceDefinitionId);
     if (device == null) {
-      logger.debug("Can not find device by user: {}, developer: {}, deviceDefinition: {}.",
-          userId, developerId, deviceDefinitionId);
+      LOGGER.debug("Can not find device by user: {}, developer: {}, deviceDefinition: {}.",
+        userId, developerId, deviceDefinitionId);
       throw new NotExistException("Device not find");
     }
     DeviceView result = DeviceMapper.toView(device);
 
-    logger.debug("Exit. device: {}.", result);
+    LOGGER.debug("Exit. device: {}.", result);
 
     return result;
   }
@@ -224,24 +217,29 @@ public class DeviceApplication {
    * @return
    */
   public List<DeviceData> getDeviceData(String developerId) {
-    logger.debug("Enter. developerId: {}.", developerId);
+    LOGGER.debug("Enter. developerId: {}.", developerId);
 
     List<Device> devices = deviceService.getByDeveloper(developerId);
 
     List<DeviceData> deviceData = DeviceDataMapper.toModel(devices);
     // TODO: 17/7/13 获取用户手机和产品名称
 
-    logger.debug("Exit. deviceData size: {}.", deviceData.size());
+    LOGGER.debug("Exit. deviceData size: {}.", deviceData.size());
 
     return deviceData;
   }
 
+  /**
+   * Count devices.
+   *
+   * @return
+   */
   public Long countDevices() {
-    logger.debug("Enter.");
+    LOGGER.debug("Enter.");
 
     Long count = deviceService.countDevices();
 
-    logger.debug("Exit. device count: {}.", count);
+    LOGGER.debug("Exit. device count: {}.", count);
 
     return count;
   }

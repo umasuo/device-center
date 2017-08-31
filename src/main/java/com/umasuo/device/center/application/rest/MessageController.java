@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * Created by umasuo on 17/7/14.
+ * Message controller.
  */
 @RestController
 @CrossOrigin
@@ -27,13 +27,13 @@ public class MessageController {
   /**
    * Logger.
    */
-  private static final Logger logger = LoggerFactory.getLogger(MessageController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(MessageController.class);
 
   /**
    * The Token service.
    */
   @Autowired
-  private MessageApplication messageApplication;
+  private transient MessageApplication messageApplication;
 
   /**
    * 发送消息给设备，消息可以是控制指令，也可以是下发的数据.
@@ -47,12 +47,12 @@ public class MessageController {
   public void sendMessageToDevice(@RequestHeader("userId") String userId,
                                   @PathVariable("id") String deviceId,
                                   @RequestBody DeviceMessage message) {
-    logger.info("Enter. userId: {}, deviceId: {}, message: {}.", userId, deviceId, message);
+    LOGGER.info("Enter. userId: {}, deviceId: {}, message: {}.", userId, deviceId, message);
     message.setDeviceId(deviceId);
 
     messageApplication.publish(deviceId, userId, message);
 
-    logger.info("Exit.");
+    LOGGER.info("Exit.");
   }
 
   /**

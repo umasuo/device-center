@@ -3,27 +3,48 @@ package com.umasuo.device.center.application.dto.mapper;
 import com.umasuo.device.center.application.dto.DeviceDraft;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.domain.model.Device;
-
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
- * Created by umasuo on 17/6/5.
+ * Device mapper.
  */
-public class DeviceMapper {
+public final class DeviceMapper {
 
-  public static Device toModel(DeviceDraft draft, String developerId, String userId) {
+  /**
+   * Private default constructor.
+   */
+  private DeviceMapper() {
+  }
+
+  /**
+   * From draft
+   *
+   * @param draft
+   * @param userId
+   * @param developerId
+   * @return
+   */
+  public static Device toModel(DeviceDraft draft, String userId, String developerId) {
     Device device = new Device();
-    device.setProductId(draft.getProductId());
-    device.setUnionId(draft.getUnionId());
+
     device.setDeveloperId(developerId);
     device.setOwnerId(userId);
+    device.setUnionId(draft.getUnionId());
+    device.setProductId(draft.getProductId());
+    device.setPublicKey(RandomStringUtils.randomAlphanumeric(9));
+
     return device;
   }
 
+  /**
+   * To view.
+   *
+   * @param device
+   * @return
+   */
   public static DeviceView toView(Device device) {
     DeviceView deviceView = new DeviceView();
     deviceView.setCreatedAt(device.getCreatedAt());
@@ -40,23 +61,18 @@ public class DeviceMapper {
     return deviceView;
   }
 
+  /**
+   * To view list.
+   *
+   * @param devices
+   * @return
+   */
   public static List<DeviceView> toView(List<Device> devices) {
     List<DeviceView> views = new ArrayList<>();
     devices.stream().forEach(
-        device -> views.add(toView(device))
+      device -> views.add(toView(device))
     );
     return views;
   }
 
-  public static Device build(DeviceDraft draft, String userId, String developerId) {
-    Device device = new Device();
-
-    device.setDeveloperId(developerId);
-    device.setOwnerId(userId);
-    device.setUnionId(draft.getUnionId());
-    device.setProductId(draft.getProductId());
-    device.setPublicKey(RandomStringUtils.randomAlphanumeric(9));
-
-    return device;
-  }
 }

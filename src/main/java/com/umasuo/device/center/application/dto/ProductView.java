@@ -4,11 +4,14 @@ import com.umasuo.device.center.infrastructure.enums.ProductStatus;
 import lombok.Data;
 
 /**
- * Created by Davis on 17/7/19.
+ * Product view.
  */
 @Data
 public class ProductView {
 
+  /**
+   * Product id.
+   */
   private String id;
 
   /**
@@ -26,6 +29,9 @@ public class ProductView {
    */
   private String name;
 
+  /**
+   * Product type id.
+   */
   private String productTypeId;
 
   /**

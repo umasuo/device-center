@@ -7,13 +7,13 @@ import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 
 /**
- * Created by umasuo on 17/6/5.
+ * Device draft.
  */
 @Data
 public class DeviceDraft implements Serializable {
 
   /**
-   * auto generated serial id.
+   * Auto generated serial id.
    */
   private static final long serialVersionUID = 8800732225747388907L;
 
@@ -23,6 +23,9 @@ public class DeviceDraft implements Serializable {
   @NotNull
   private String productId;
 
+  /**
+   * Device union id.
+   */
   @NotNull
   private String unionId;
 

@@ -7,10 +7,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by umasuo on 17/7/4.
+ * Union mapper.
  */
-public class UnionMapper {
+public final class UnionMapper {
 
+  /**
+   * Private default constructor.
+   */
+  private UnionMapper() {
+  }
+
+  /**
+   * Model to view.
+   *
+   * @param entity
+   * @return
+   */
   public static UnionDeviceView toView(UnionDevice entity) {
     UnionDeviceView view = new UnionDeviceView();
 
@@ -20,10 +32,16 @@ public class UnionMapper {
     return view;
   }
 
+  /**
+   * Model list to view list.
+   *
+   * @param devices
+   * @return
+   */
   public static List<UnionDeviceView> toView(List<UnionDevice> devices) {
     List<UnionDeviceView> views = new ArrayList<>();
     devices.stream().forEach(
-        unionDevice -> views.add(toView(unionDevice))
+      unionDevice -> views.add(toView(unionDevice))
     );
     return views;
   }

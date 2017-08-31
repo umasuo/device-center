@@ -3,7 +3,6 @@ package com.umasuo.device.center.application.rest;
 import com.umasuo.device.center.application.dto.DeviceReportView;
 import com.umasuo.device.center.application.service.ReportApplication;
 import com.umasuo.device.center.infrastructure.Router;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * Created by Davis on 17/6/16.
+ * Report controller for fetching report data.
  */
 @RestController
 public class ReportController {
@@ -24,8 +23,11 @@ public class ReportController {
   /**
    * Logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(ReportController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ReportController.class);
 
+  /**
+   * Report app.
+   */
   @Autowired
   private transient ReportApplication reportApplication;
 
@@ -38,13 +40,13 @@ public class ReportController {
    */
   @GetMapping(value = Router.REPORT_ROOT, params = {"startTime", "endTime"})
   public @ResponseBody
-  List<DeviceReportView> getPeriodReport(@RequestParam("startTime") long startTime,
-                                         @RequestParam("endTime") long endTime) {
-    LOG.info("Enter. startTime: {}, endTime: {}.", startTime, endTime);
+  List<DeviceReportView> getPeriodReport(@RequestParam long startTime,
+                                         @RequestParam long endTime) {
+    LOGGER.info("Enter. startTime: {}, endTime: {}.", startTime, endTime);
 
     List<DeviceReportView> reports = reportApplication.getPeriodReport(startTime, endTime);
 
-    LOG.info("Exit. report size: {}.", reports.size());
+    LOGGER.info("Exit. report size: {}.", reports.size());
 
     return reports;
   }
@@ -59,13 +61,13 @@ public class ReportController {
   @GetMapping(value = Router.REPORT_ROOT, params = {"startTime"})
   public @ResponseBody
   List<DeviceReportView> getDeveloperReport(@RequestHeader String developerId,
-                                            @RequestParam("startTime") long startTime) {
-    LOG.info("Enter. developerId: {}, startTime: {}.", developerId, startTime);
+                                            @RequestParam long startTime) {
+    LOGGER.info("Enter. developerId: {}, startTime: {}.", developerId, startTime);
 
     List<DeviceReportView> reports = reportApplication
-        .getDeveloperReportByTime(startTime, developerId);
+      .getDeveloperReportByTime(startTime, developerId);
 
-    LOG.info("Exit. report size: {}.", reports.size());
+    LOGGER.info("Exit. report size: {}.", reports.size());
 
     return reports;
   }

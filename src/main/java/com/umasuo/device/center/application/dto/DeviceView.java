@@ -5,19 +5,20 @@ import lombok.Data;
 
 import java.io.Serializable;
 
-import javax.persistence.Version;
-
 /**
- * Created by umasuo on 17/6/5.
+ * Device view.
  */
 @Data
 public class DeviceView implements Serializable {
 
   /**
-   * auto generated serial id.
+   * Auto generated serial id.
    */
   private static final long serialVersionUID = 8800732225747388907L;
 
+  /**
+   * Device id.
+   */
   private String id;
 
   /**
@@ -55,9 +56,18 @@ public class DeviceView implements Serializable {
    */
   private String ownerId;
 
+  /**
+   * Public key.
+   */
   private String publicKey;
 
+  /**
+   * Device id.
+   */
   private String deviceId;
 
+  /**
+   * Device status.
+   */
   private DeviceStatus status;
 }

@@ -1,7 +1,6 @@
 package com.umasuo.device.center.infrastructure.validator;
 
 import com.umasuo.exception.ParametersException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,14 +10,14 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
 /**
- * Created by Davis on 17/6/16.
+ * Time validator.
  */
 public final class TimeValidator {
 
   /**
    * Logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(TimeValidator.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(TimeValidator.class);
 
   /**
    * Instantiates a new Time validator.
@@ -40,7 +39,7 @@ public final class TimeValidator {
     long hoursRange = ChronoUnit.HOURS.between(start, end);
 
     if (hoursRange > 25 || hoursRange < -25) {
-      LOG.debug("Can not get report more than 24 hours. startDate: {}, endDate: {}.", start, end);
+      LOGGER.debug("Can not get report more than 24 hours. startDate: {}, endDate: {}.", start, end);
       throw new ParametersException("Can not get report more than 24 hours");
     }
 
@@ -48,11 +47,15 @@ public final class TimeValidator {
 
     long daysRange = ChronoUnit.DAYS.between(now, end);
     if (daysRange > 1 || daysRange < -1) {
-      LOG.debug("Can not get more than 1 day ago report");
+      LOGGER.debug("Can not get more than 1 day ago report");
       throw new ParametersException("Can not get more than 1 day ago report");
     }
   }
 
+  /**
+   * Validate start time.
+   * @param startTime
+   */
   public static void validate(long startTime) {
     ZonedDateTime start = Instant.ofEpochMilli(startTime).atZone(ZoneOffset.UTC);
 
@@ -60,7 +63,7 @@ public final class TimeValidator {
 
     long daysRange = ChronoUnit.DAYS.between(now, start);
     if (daysRange > 1 || daysRange < -1) {
-      LOG.debug("Can not get more than 1 day ago report");
+      LOGGER.debug("Can not get more than 1 day ago report");
       throw new ParametersException("Can not get more than 1 day ago report");
     }
   }

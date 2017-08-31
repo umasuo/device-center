@@ -5,25 +5,45 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * Created by umasuo on 17/7/14.
  * 目前为止，消息由APP直接处理，服务端不进行消息的处理.
  */
 @Data
 public class DeviceMessage implements Serializable {
 
+  /**
+   * Auto generated serial version id.
+   */
   private static final long serialVersionUID = 9190245794314412899L;
 
+  /**
+   * Message tyoe.
+   */
   private int type;
 
+  /**
+   * time.
+   */
   private long t;
 
+  /**
+   * Device id.
+   */
   private String deviceId;
 
+  /**
+   * Content.
+   */
   private Content content;
 
+  /**
+   * Content.
+   */
   @Data
-  public class Content implements Serializable {
+  public static class Content implements Serializable {
 
+    /**
+     * Auto generated serial version id.
+     */
     private static final long serialVersionUID = -7158942951264289765L;
     /**
      * 设备活着数据功能点ID.

@@ -5,7 +5,6 @@ import com.umasuo.device.center.application.dto.DeviceDraft;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.application.service.DeviceApplication;
 import com.umasuo.device.center.infrastructure.Router;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +23,20 @@ import java.util.List;
 import javax.validation.Valid;
 
 /**
- * Created by umasuo on 17/6/5.
+ * Device controller.
  */
 @RestController
 @CrossOrigin
 public class DeviceController {
 
-  private final static Logger logger = LoggerFactory.getLogger(DeviceController.class);
+  /**
+   * Logger.
+   */
+  private final static Logger LOGGER = LoggerFactory.getLogger(DeviceController.class);
 
+  /**
+   * Device app.
+   */
   @Autowired
   private transient DeviceApplication deviceApplication;
 
@@ -39,13 +44,13 @@ public class DeviceController {
    * 激活设备。
    */
   @PostMapping(Router.DEVICE_CENTER_ROOT)
-  public DeviceActivateResult activate(@RequestHeader("userId") String userId,
-      @RequestBody @Valid DeviceDraft draft) {
-    logger.info("Enter. deviceDraft: {}.", draft);
+  public DeviceActivateResult activate(@RequestHeader String userId,
+                                       @RequestBody @Valid DeviceDraft draft) {
+    LOGGER.info("Enter. deviceDraft: {}.", draft);
 
     DeviceActivateResult result = deviceApplication.activate(draft, userId);
 
-    logger.info("Exit. result:{}.", result);
+    LOGGER.info("Exit. result:{}.", result);
     return result;
   }
 
@@ -53,83 +58,88 @@ public class DeviceController {
    * 解除用户与设备的绑定关系。
    */
   @DeleteMapping(Router.DEVICE_CENTER_WITH_ID)
-  public void unbind(@RequestHeader("userId") String userId,
-      @PathVariable("id") String deviceId) {
-    logger.info("Enter. userId: {}, deviceId: {}.", userId, deviceId);
+  public void unbind(@RequestHeader String userId,
+                     @PathVariable("id") String deviceId) {
+    LOGGER.info("Enter. userId: {}, deviceId: {}.", userId, deviceId);
 
     deviceApplication.unbind(userId, deviceId);
 
-    logger.info("Exit.");
+    LOGGER.info("Exit.");
   }
 
   /**
    * get device by device id.
    *
-   * @param id String device id
-   * @param userId the user id
+   * @param id          String device id
+   * @param userId      the user id
    * @param developerId the developer id
    * @return DeviceView device
    */
   @GetMapping(Router.DEVICE_CENTER_WITH_ID)
   public DeviceView getDevice(@PathVariable String id,
-      @RequestHeader(required = false) String userId,
-      @RequestHeader String developerId) {
-    logger.info("Enter. deviceId: {}.", id);
+                              @RequestHeader(required = false) String userId,
+                              @RequestHeader String developerId) {
+    LOGGER.info("Enter. deviceId: {}.", id);
 
     DeviceView view = deviceApplication.getByDeviceId(id, developerId, userId);
 
-    logger.info("Exit. deviceView: {}.", view);
+    LOGGER.info("Exit. deviceView: {}.", view);
     return view;
   }
 
   /**
    * 获取用户在某个开发者下的所有设备.
    *
-   * @param userId String
+   * @param userId      String
    * @param developerId String in header
    * @return list of device view
    */
   @GetMapping(value = Router.DEVICE_CENTER_ROOT, headers = {"userId", "developerId"})
   public List<DeviceView> getAllDeviceByUser(@RequestHeader String userId,
-      @RequestHeader String developerId) {
-    logger.info("Enter. userId: {}, developerId: {}.", userId, developerId);
+                                             @RequestHeader String developerId) {
+    LOGGER.info("Enter. userId: {}, developerId: {}.", userId, developerId);
 
     List<DeviceView> views = deviceApplication.getByUserAndDeveloper(userId, developerId);
 
-    logger.info("Exit. views: {}.", views);
+    LOGGER.info("Exit. views: {}.", views);
     return views;
   }
 
   /**
    * Gets device by definition.
    *
-   * @param userId the user id
+   * @param userId             the user id
    * @param deviceDefinitionId the device definition id
-   * @param developerId the developer id
+   * @param developerId        the developer id
    * @return the device by definition
    */
   @GetMapping(value = Router.DEVICE_CENTER_ROOT, params = {"userId", "deviceDefinitionId"})
   public DeviceView getDeviceByDefinition(@RequestParam String userId,
-      @RequestParam String deviceDefinitionId, @RequestHeader
-      String developerId) {
-    logger.info("Enter. userId: {}, developerId: {}, deviceDefinitionId: {}.",
-        userId, developerId, deviceDefinitionId);
+                                          @RequestParam String deviceDefinitionId, @RequestHeader
+                                            String developerId) {
+    LOGGER.info("Enter. userId: {}, developerId: {}, deviceDefinitionId: {}.",
+      userId, developerId, deviceDefinitionId);
 
     DeviceView device = deviceApplication
-        .getByUserAndDefinition(userId, developerId, deviceDefinitionId);
+      .getByUserAndDefinition(userId, developerId, deviceDefinitionId);
 
-    logger.info("Exit. device: {}.", device);
+    LOGGER.info("Exit. device: {}.", device);
 
     return device;
   }
 
-  @GetMapping("/v1/admin/devices/count")
+  /**
+   * Count device.
+   *
+   * @return
+   */
+  @GetMapping(value = Router.DEVICE_COUNT)
   public Long countDevices() {
-    logger.info("Enter.");
+    LOGGER.info("Enter.");
 
     Long count = deviceApplication.countDevices();
 
-    logger.debug("Exit. device count: {}.", count);
+    LOGGER.debug("Exit. device count: {}.", count);
 
     return count;
   }

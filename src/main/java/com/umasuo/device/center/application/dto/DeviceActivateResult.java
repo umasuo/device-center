@@ -4,7 +4,7 @@ import com.umasuo.device.center.domain.model.Device;
 import lombok.Data;
 
 /**
- * Created by Davis on 17/6/27.
+ * Device activate result.
  */
 @Data
 public class DeviceActivateResult {
@@ -19,6 +19,12 @@ public class DeviceActivateResult {
    */
   private String publicKey;
 
+  /**
+   * Build result.
+   *
+   * @param device
+   * @return
+   */
   public static DeviceActivateResult build(Device device) {
     DeviceActivateResult result = new DeviceActivateResult();
 

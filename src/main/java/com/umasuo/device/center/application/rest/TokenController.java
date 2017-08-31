@@ -2,7 +2,6 @@ package com.umasuo.device.center.application.rest;
 
 import com.umasuo.device.center.application.service.TokenApplication;
 import com.umasuo.device.center.infrastructure.Router;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Created by Davis on 17/6/27.
+ * Token controller.
  */
 @RestController
 public class TokenController {
@@ -19,13 +18,13 @@ public class TokenController {
   /**
    * Logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(TokenController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(TokenController.class);
 
   /**
    * The Token service.
    */
   @Autowired
-  private TokenApplication tokenApplication;
+  private transient TokenApplication tokenApplication;
 
   /**
    * Create token string.
@@ -35,11 +34,11 @@ public class TokenController {
    */
   @PostMapping(value = Router.DEVICE_TOKEN)
   public String createToken(@RequestHeader("userId") String userId) {
-    LOG.info("Enter. userId: {}.", userId);
+    LOGGER.info("Enter. userId: {}.", userId);
 
     String token = tokenApplication.createToken(userId);
 
-    LOG.info("Exit. token: {}.", token);
+    LOGGER.info("Exit. token: {}.", token);
 
     return token;
   }

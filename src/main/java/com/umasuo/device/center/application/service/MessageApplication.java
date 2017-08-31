@@ -2,10 +2,9 @@ package com.umasuo.device.center.application.service;
 
 import com.umasuo.device.center.application.dto.DeviceMessage;
 import com.umasuo.device.center.infrastructure.configuration.AppConfig;
-import com.umasuo.device.center.infrastructure.exception.GeneratePasswordException;
 import com.umasuo.device.center.infrastructure.exception.SubDeviceTopicException;
 import com.umasuo.device.center.infrastructure.util.DevicePasswordUtils;
-import com.umasuo.device.center.infrastructure.util.JsonUtils;
+import com.umasuo.util.JsonUtils;
 import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.Message;
@@ -19,6 +18,7 @@ import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,11 +32,6 @@ public class MessageApplication implements CommandLineRunner {
    * Logger.
    */
   private static final Logger LOGGER = LoggerFactory.getLogger(MessageApplication.class);
-
-  /**
-   * MQTT client.
-   */
-  private transient MQTT mqtt;
 
   /**
    * MQTT client connection.
@@ -61,7 +56,7 @@ public class MessageApplication implements CommandLineRunner {
   /**
    * 所有此service监听的topic
    */
-  private List<Topic> topics = new ArrayList<>();
+  private transient List<Topic> topics = new ArrayList<>();
 
   /**
    * redis ops.
@@ -88,9 +83,9 @@ public class MessageApplication implements CommandLineRunner {
     this.deviceMessageHandler = deviceMessageHandler;
     //自动添加用户名密码，保证其可以
     redisTemplate.boundHashOps(USERNAME_PREFIX + appConfig.getUsername()).put("password",
-        appConfig.getPassword());
+      appConfig.getPassword());
 
-    mqtt = new MQTT();
+    MQTT mqtt = new MQTT();
     mqtt.setUserName(appConfig.getUsername());
     mqtt.setPassword(appConfig.getPassword());
 
@@ -114,9 +109,9 @@ public class MessageApplication implements CommandLineRunner {
    * @param retain  是否保持在broker上
    */
   public void publish(final String topic, final byte[] payload, final QoS qos, final boolean
-      retain) {
+    retain) {
     LOGGER.debug("Enter. topic: {}, payload: {}, qos: {}, retain: {}.", topic, new String
-        (payload), qos, retain);
+      (payload, StandardCharsets.UTF_8), qos, retain);
     try {
       connection.publish(topic, payload, qos, retain);
     } catch (Exception e) {
@@ -135,7 +130,7 @@ public class MessageApplication implements CommandLineRunner {
     //组织每个用户的App只订阅自己的那一个topic,对topic内容的解析交给程序自己
     String topic = DEVICE_TOPIC_SUB_PREFIX + deviceId;
     String msg = JsonUtils.serialize(message);
-    publish(topic, msg.getBytes(), QoS.AT_LEAST_ONCE, false);
+    publish(topic, msg.getBytes(StandardCharsets.UTF_8), QoS.AT_LEAST_ONCE, false);
   }
 
   /**
@@ -148,9 +143,7 @@ public class MessageApplication implements CommandLineRunner {
     LOGGER.debug("Add broker user: {}.", username);
     try {
       String password = DevicePasswordUtils.getPassword(publicKey);
-      if (password == null) {
-        throw new GeneratePasswordException("Generate device password failed.");
-      }
+
       Topic topic = new Topic(DEVICE_TOPIC_PUB_PREFIX + username, QoS.AT_LEAST_ONCE);
       topics.remove(topic);//如果已经存在，先移除，再重新添加
       topics.add(topic);
@@ -179,8 +172,7 @@ public class MessageApplication implements CommandLineRunner {
       Message message = connection.receive();
       if (message != null) {
         String topic = message.getTopic();//从这里可以获得deviceID
-        boolean handlerResult = deviceMessageHandler.handler(topic, new String(message.getPayload
-            ()));
+        boolean handlerResult = deviceMessageHandler.handler(topic, message.getPayload());
         if (handlerResult) {
           message.ack();
         }

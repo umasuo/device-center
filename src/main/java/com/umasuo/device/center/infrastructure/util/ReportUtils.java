@@ -5,6 +5,7 @@ import com.umasuo.device.center.application.dto.DeviceReportView;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -40,10 +41,16 @@ public final class ReportUtils {
     return result;
   }
 
-  private static void handleRegisterReport(List<DeviceReportView> result, HashMap map) {
+  /**
+   * Handle register report.
+   *
+   * @param result
+   * @param map
+   */
+  private static void handleRegisterReport(List<DeviceReportView> result, Map map) {
     Consumer<DeviceReportView> consumer = deviceReportView -> {
       if (deviceReportView.getDeveloperId().equals(map.get("developerId").toString()) &&
-          deviceReportView.getDeviceDefinitionId().equals(map.get("productId").toString())) {
+        deviceReportView.getDeviceDefinitionId().equals(map.get("productId").toString())) {
         deviceReportView.setRegisterNumber(Integer.valueOf(map.get("registerCount").toString()));
       }
     };
@@ -51,7 +58,13 @@ public final class ReportUtils {
     result.stream().forEach(consumer);
   }
 
-  private static void handleTotalReport(List<DeviceReportView> result, HashMap map) {
+  /**
+   * Handle total report.s
+   *
+   * @param result
+   * @param map
+   */
+  private static void handleTotalReport(List<DeviceReportView> result, Map map) {
     DeviceReportView reportView = new DeviceReportView();
 
     reportView.setDeveloperId(map.get("developerId").toString());

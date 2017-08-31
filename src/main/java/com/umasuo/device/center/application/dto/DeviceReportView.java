@@ -1,11 +1,9 @@
 package com.umasuo.device.center.application.dto;
 
-import static java.lang.Math.toIntExact;
-
 import lombok.Data;
 
 /**
- * Created by Davis on 17/6/16.
+ * Device report view.
  */
 @Data
 public class DeviceReportView {

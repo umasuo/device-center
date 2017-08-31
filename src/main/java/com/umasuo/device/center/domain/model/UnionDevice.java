@@ -1,24 +1,17 @@
 package com.umasuo.device.center.domain.model;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 /**
- * Created by Davis on 17/6/27.
+ * Union device.
  */
 @Entity
 @Table(name = "union_device")
@@ -26,6 +19,9 @@ import javax.persistence.Version;
 @EntityListeners(AuditingEntityListener.class)
 public class UnionDevice {
 
+  /**
+   * Union id.
+   */
   @Id
   @Column(name = "union_id")
   private String unionId;
@@ -43,6 +39,9 @@ public class UnionDevice {
   @Column(name = "developer_id")
   private String developerId;
 
+  /**
+   * Product id.
+   */
   @Column(name = "product_Id")
   private String productId;
 

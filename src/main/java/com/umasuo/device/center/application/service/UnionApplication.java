@@ -12,7 +12,6 @@ import com.umasuo.device.center.infrastructure.enums.ProductStatus;
 import com.umasuo.exception.AlreadyExistException;
 import com.umasuo.exception.AuthFailedException;
 import com.umasuo.exception.CreateResourceFailed;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by Davis on 17/7/19.
+ * Union Application.
  */
 @Service
 public class UnionApplication {
@@ -31,16 +30,22 @@ public class UnionApplication {
   /**
    * Logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(UnionApplication.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(UnionApplication.class);
 
   /**
    * Token length.
    */
   private static final int SECRET_KEY_LENGTH = 7;
 
+  /**
+   * Union device service.
+   */
   @Autowired
   public transient UnionDeviceService unionDeviceService;
 
+  /**
+   * Rest client.
+   */
   @Autowired
   private transient RestClient restClient;
 
@@ -48,11 +53,11 @@ public class UnionApplication {
    * 批量新建union id.
    *
    * @param developerId the developer id
-   * @param request the quantity
+   * @param request     the quantity
    * @return the list
    */
   public List<UnionDeviceView> batchCreate(String developerId, UnionDeviceRequest request) {
-    LOG.debug("Enter. developerId: {}, request: {}.", developerId, request);
+    LOGGER.debug("Enter. developerId: {}, request: {}.", developerId, request);
 
     List<UnionDevice> unionDevices = Lists.newArrayList();
 
@@ -73,13 +78,20 @@ public class UnionApplication {
 
     List<UnionDeviceView> result = UnionMapper.toView(unionDevices);
 
-    LOG.debug("Exit.");
+    LOGGER.debug("Exit.");
 
     return result;
   }
 
+  /**
+   * Register device.
+   *
+   * @param developerId
+   * @param request
+   * @return
+   */
   public UnionDeviceView register(String developerId, UnionRegisterRequest request) {
-    LOG.debug("Enter. developerId: {}, request: {}.", developerId, request);
+    LOGGER.debug("Enter. developerId: {}, request: {}.", developerId, request);
     UnionDevice unionDevice = new UnionDevice();
     unionDevice.setDeveloperId(developerId);
 
@@ -91,26 +103,32 @@ public class UnionApplication {
     unionDevice.setUnionId(unionId);
 
     if (unionDeviceService.isUnionIdExist(unionId)) {
-      LOG.debug("unionId: {} is already exist.", unionId);
+      LOGGER.debug("unionId: {} is already exist.", unionId);
       throw new AlreadyExistException("UnionId is already exist");
     }
 
     unionDeviceService.save(unionDevice);
 
-    LOG.debug("Exit. unionDevice: {}.", unionDevice);
+    LOGGER.debug("Exit. unionDevice: {}.", unionDevice);
     return UnionMapper.toView(unionDevice);
   }
 
+  /**
+   * Check product.
+   *
+   * @param developerId
+   * @param productId
+   */
   private void checkProduct(String developerId, String productId) {
     ProductView product = restClient.getProduct(developerId, productId);
 
     if (developerId.equals(product.getDeveloperId())) {
-      LOG.debug("Developer: {} don't own this product: {}.", developerId, productId);
+      LOGGER.debug("Developer: {} don't own this product: {}.", developerId, productId);
       throw new AuthFailedException("Developer do not own this product");
     }
 
     if (!ProductStatus.PUBLISHED.equals(product.getStatus())) {
-      LOG.debug("Product: {} is not published.", productId);
+      LOGGER.debug("Product: {} is not published.", productId);
       throw new CreateResourceFailed("Product is not published");
     }
   }

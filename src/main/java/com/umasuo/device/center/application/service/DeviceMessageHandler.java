@@ -2,26 +2,29 @@ package com.umasuo.device.center.application.service;
 
 import com.umasuo.device.center.application.dto.DeviceMessage;
 import com.umasuo.device.center.application.dto.Session;
-import com.umasuo.device.center.infrastructure.util.JsonUtils;
+import com.umasuo.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+
 /**
- * Created by umasuo on 17/6/30.
  * Device message handler, used to handler messages that device send to cloud.
  */
 @Service
 public class DeviceMessageHandler {
 
-  private static final Logger logger = LoggerFactory.getLogger(DeviceMessageHandler.class);
+  /**
+   * Logger.
+   */
+  private static final Logger LOGGER = LoggerFactory.getLogger(DeviceMessageHandler.class);
 
+  /**
+   * Device message max delay.
+   */
   private static final long SECOND_OF_MAX_DELAY = 10 * 60;//每个设备的时差超过10分钟就需要重置时间了
-
-  @Autowired
-  private RedisTemplate redisTemplate;
 
   /**
    * device service.
@@ -37,19 +40,19 @@ public class DeviceMessageHandler {
    * 4 执行对应的服务
    * 5 正确处理之后，返回true，否则返回false，以供再次处理消息
    *
-   * @param deviceId   deviceId
-   * @param contentStr the real content
+   * @param deviceId deviceId
    * @return handler result
    */
-  public boolean handler(String deviceId, String contentStr) {
-    logger.debug("Enter. deviceId: {}, content: {}.", deviceId, contentStr);
-    //
+  public boolean handler(String deviceId, byte[] payload) {
 
-    Session session = sessionApplication.getSession(deviceId);
-    String publicKey = session.getDevice().getPublicKey();
+    String contentStr = new String(payload, StandardCharsets.UTF_8);
+    LOGGER.debug("Enter. deviceId: {}, content: {}.", deviceId, contentStr);
+
+
+//    String publicKey = session.getDevice().getPublicKey();
     //todo 通过public key解密content
     DeviceMessage message = JsonUtils.deserialize(contentStr, DeviceMessage.class);
-    DeviceMessage.Content content = message.getContent();
+//    DeviceMessage.Content content = message.getContent();
 
 
     //时间戳为UTC 0 的时间戳
@@ -62,7 +65,7 @@ public class DeviceMessageHandler {
     }
 
     //处理消息
-
+    Session session = sessionApplication.getSession(deviceId);
     switch (message.getType()) {
       case 1:
         return processFunction(message, session);

@@ -2,7 +2,6 @@ package com.umasuo.device.center.application.service;
 
 import com.umasuo.exception.NotExistException;
 import com.umasuo.exception.ParametersException;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by Davis on 17/6/27.
+ * Token application.
  */
 @Service
 public class TokenApplication {
@@ -22,7 +21,7 @@ public class TokenApplication {
   /**
    * Logger.
    */
-  private static final Logger logger = LoggerFactory.getLogger(TokenApplication.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(TokenApplication.class);
 
   /**
    * Validation code expire time;
@@ -52,7 +51,7 @@ public class TokenApplication {
    * @return
    */
   public String createToken(String userId) {
-    logger.debug("Enter. userId: {}.", userId);
+    LOGGER.debug("Enter. userId: {}.", userId);
 
     String key = USER_DEVICE_TOKEN_PREFIX + userId;
     String token = (String) redisTemplate.opsForValue().get(key);
@@ -61,7 +60,7 @@ public class TokenApplication {
       redisTemplate.opsForValue().set(key, token, EXPIRE_TIME, TimeUnit.MINUTES);
     }
 
-    logger.debug("Exit. token: {}.", token);
+    LOGGER.debug("Exit. token: {}.", token);
     return token;
   }
 
@@ -72,17 +71,17 @@ public class TokenApplication {
    * @param token
    */
   public void validateToken(String userId, String token) {
-    logger.debug("Enter. userId: {}, token: {}.", userId, token);
+    LOGGER.debug("Enter. userId: {}, token: {}.", userId, token);
 
     String key = USER_DEVICE_TOKEN_PREFIX + userId;
     String requestToken = (String) redisTemplate.opsForValue().get(key);
     if (StringUtils.isBlank(requestToken)) {
-      logger.debug("Can not find token by user: {}.", userId);
+      LOGGER.debug("Can not find token by user: {}.", userId);
       throw new NotExistException("Token not exist or expire.");
     }
 
     if (!requestToken.equals(token)) {
-      logger.debug("Token not match, input token: {}, request token: {}.", token, requestToken);
+      LOGGER.debug("Token not match, input token: {}, request token: {}.", token, requestToken);
       throw new ParametersException("Token not match");
     }
 

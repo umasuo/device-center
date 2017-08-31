@@ -11,22 +11,39 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by umasuo on 17/7/3.
+ * Session application.
  */
 @Service
 public class SessionApplication {
 
-  private static final Logger logger = LoggerFactory.getLogger(SessionApplication.class);
+  /**
+   * Logger.
+   */
+  private static final Logger LOGGER = LoggerFactory.getLogger(SessionApplication.class);
 
-  public static String DEVICE_KEY = "device:";
-  public static String SESSION_KEY = "session";
+  /**
+   * Device prefix.
+   */
+  public static final String DEVICE_KEY = "device:";
+  /**
+   * Session key.
+   */
+  public static final String SESSION_KEY = "session";
+
   /**
    * redis ops.
    */
   @Autowired
   private transient RedisTemplate redisTemplate;
 
+  /**
+   * Get session
+   *
+   * @param deviceId
+   * @return
+   */
   public Session getSession(String deviceId) {
+    LOGGER.debug("Enter. deviceId:{}.", deviceId);
     String developerId = (String) redisTemplate.boundValueOps(DEVICE_KEY + ":" + deviceId).get();
     String deviceKey = DEVICE_KEY + developerId + ":" + deviceId;
     return (Session) redisTemplate.boundHashOps(deviceKey).get(SESSION_KEY);
@@ -38,6 +55,7 @@ public class SessionApplication {
    * @param device Device
    */
   public void updateSession(Device device) {
+    LOGGER.debug("Enter. device:{}.", device);
     String deviceId = device.getDeviceId();
     String developerId = device.getDeveloperId();
     String deviceKey = DEVICE_KEY + developerId + ":" + deviceId;

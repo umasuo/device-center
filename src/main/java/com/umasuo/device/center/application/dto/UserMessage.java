@@ -5,12 +5,14 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * Created by umasuo on 17/7/14.
  * 用户的消息格式.
  */
 @Data
 public class UserMessage implements Serializable {
 
+  /**
+   * Auto generated serial version id.
+   */
   private static final long serialVersionUID = 9190245794314412899L;
 
   /**
@@ -28,11 +30,20 @@ public class UserMessage implements Serializable {
    */
   private String deviceId;
 
+  /**
+   * Content.
+   */
   private Content content;
 
+  /**
+   * Content class.
+   */
   @Data
-  class Content implements Serializable {
+  public static class Content implements Serializable {
 
+    /**
+     * Auto generated serial version id.
+     */
     private static final long serialVersionUID = -7158942951264289765L;
     /**
      * 消息类型

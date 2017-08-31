@@ -6,15 +6,21 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Created by Davis on 17/7/14.
+ * Union register request.
  */
 @Data
 public class UnionRegisterRequest {
 
+  /**
+   * Union id.
+   */
   @NotNull
   @Size(max = 32)
   private String unionId;
 
+  /**
+   * Product.
+   */
   @NotNull
   @Size(min = 12, max = 32)
   private String productId;

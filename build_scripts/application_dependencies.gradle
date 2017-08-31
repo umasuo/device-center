@@ -28,6 +28,6 @@ dependencies {
     // Lombok
     compile('org.projectlombok:lombok:1.16.12')
 
-    compile("com.umasuo:commons:0.2")
+    compile("com.umasuo:commons:0.3")
 
 }

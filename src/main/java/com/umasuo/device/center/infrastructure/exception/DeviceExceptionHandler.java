@@ -1,6 +1,7 @@
 package com.umasuo.device.center.infrastructure.exception;
 
-import com.umasuo.device.center.infrastructure.util.JsonUtils;
+import com.umasuo.exception.handler.ExceptionHandler;
+import com.umasuo.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -13,20 +14,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by Davis on 17/6/19.
+ * Device center's exception handler.
  */
 @Component
-public class ExceptionHandler implements com.umasuo.exception.handler.ExceptionHandler,
-    HandlerExceptionResolver {
+public class DeviceExceptionHandler implements ExceptionHandler,
+  HandlerExceptionResolver {
 
   /**
    * Logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(ExceptionHandler.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(DeviceExceptionHandler.class);
 
+  /**
+   * Resolve exception.
+   *
+   * @param request
+   * @param response
+   * @param handler
+   * @param ex
+   * @return
+   */
   @Override
   public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response,
-      Object handler, Exception ex) {
+                                       Object handler, Exception ex) {
     setResponse(request, response, handler, ex);
     addExceptionBody(response, ex);
     return new ModelAndView();
@@ -42,7 +52,7 @@ public class ExceptionHandler implements com.umasuo.exception.handler.ExceptionH
         response.getWriter().print(JsonUtils.serialize(body));
       }
     } catch (IOException e) {
-      LOG.error("failed to write response JSON", e);
+      LOGGER.error("failed to write response JSON", e);
       throw new IllegalStateException(e);
     }
   }
@@ -57,7 +67,7 @@ public class ExceptionHandler implements com.umasuo.exception.handler.ExceptionH
     ExceptionBody body = null;
     if (ex instanceof AlreadyBoundException) {
       body = ExceptionBody.of(ExceptionBody.DEVICE_ALREADY_BOUND_CODE,
-          ExceptionBody.DEVICE_ALREADY_BOUND_MESSAGE);
+        ExceptionBody.DEVICE_ALREADY_BOUND_MESSAGE);
     }
     return body;
   }

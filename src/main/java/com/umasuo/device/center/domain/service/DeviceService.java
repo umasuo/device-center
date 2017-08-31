@@ -4,7 +4,6 @@ import com.umasuo.device.center.domain.model.Device;
 import com.umasuo.device.center.infrastructure.enums.DeviceStatus;
 import com.umasuo.device.center.infrastructure.repository.DeviceRepository;
 import com.umasuo.exception.NotExistException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +14,15 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by umasuo on 17/6/5.
+ * Device service.
  */
 @Service
 public class DeviceService {
 
   /**
-   * logger.
+   * LOGGER.
    */
-  private final static Logger logger = LoggerFactory.getLogger(DeviceService.class);
+  private final static Logger LOGGER = LoggerFactory.getLogger(DeviceService.class);
 
   /**
    * The DeviceRepository.
@@ -38,11 +37,11 @@ public class DeviceService {
    * @return device device
    */
   public Device save(Device sample) {
-    logger.debug("Enter. sample: {}.", sample);
+    LOGGER.debug("Enter. sample: {}.", sample);
 
     Device saved = deviceRepository.save(sample);
 
-    logger.debug("Exit. savedDevice: {}.", saved);
+    LOGGER.debug("Exit. savedDevice: {}.", saved);
     return saved;
   }
 
@@ -53,14 +52,14 @@ public class DeviceService {
    * @return device device
    */
   public Device get(String id) {
-    logger.debug("Enter. id: {}.", id);
+    LOGGER.debug("Enter. id: {}.", id);
 
     Device device = deviceRepository.findOne(id);
     if (device == null) {
-      logger.debug("Device: {} not exist.", id);
+      LOGGER.debug("Device: {} not exist.", id);
       throw new NotExistException("Device not exist for id: " + id);
     }
-    logger.debug("Exit. device: {}.", id);
+    LOGGER.debug("Exit. device: {}.", device);
     return device;
   }
 
@@ -72,7 +71,7 @@ public class DeviceService {
    * @return list of device
    */
   public List<Device> getByUserAndDeveloper(String userId, String developerId) {
-    logger.debug("Enter. userId: {}, developerId: {}.", userId, developerId);
+    LOGGER.debug("Enter. userId: {}, developerId: {}.", userId, developerId);
 
     Device device = new Device();
     device.setOwnerId(userId);
@@ -80,8 +79,8 @@ public class DeviceService {
     Example<Device> example = Example.of(device);
     List<Device> devices = deviceRepository.findAll(example);
 
-    logger.debug("Enter. deviceSize: {}.", devices.size());
-    logger.debug("devices: {}.", devices);
+    LOGGER.debug("Exit. deviceSize: {}.", devices.size());
+    LOGGER.debug("devices: {}.", devices);
     return devices;
   }
 
@@ -93,14 +92,14 @@ public class DeviceService {
    * @return list of device
    */
   public List<Device> getByDeviceDefineId(String deviceDefineId) {
-    logger.debug("Enter. productId: {}.", deviceDefineId);
+    LOGGER.debug("Enter. productId: {}.", deviceDefineId);
 
     Device device = new Device();
     device.setProductId(deviceDefineId);
     Example<Device> example = Example.of(device);
     List<Device> devices = deviceRepository.findAll(example);
 
-    logger.debug("Exit. count: {}.", devices);
+    LOGGER.debug("Exit. count: {}.", devices);
     return devices;
   }
 
@@ -114,8 +113,8 @@ public class DeviceService {
    */
   public Device getByUserAndDefinition(String userId, String developerId,
                                        String deviceDefinitionId) {
-    logger.debug("Enter. userId: {}, developerId: {}, deviceDefinitionId: {}.", userId, developerId,
-        deviceDefinitionId);
+    LOGGER.debug("Enter. userId: {}, developerId: {}, deviceDefinitionId: {}.", userId, developerId,
+      deviceDefinitionId);
 
     Device sample = new Device();
     sample.setProductId(deviceDefinitionId);
@@ -126,7 +125,7 @@ public class DeviceService {
 
     Device device = deviceRepository.findOne(example);
 
-    logger.debug("Exit. device: {}.", device);
+    LOGGER.debug("Exit. device: {}.", device);
 
     return device;
   }
@@ -138,11 +137,11 @@ public class DeviceService {
    * @return the all report
    */
   public List<HashMap> getTotalReport() {
-    logger.debug("Enter.");
+    LOGGER.debug("Enter.");
 
     List<HashMap> result = deviceRepository.getReport();
 
-    logger.debug("Exit. result size: {}.", result.size());
+    LOGGER.debug("Exit. result size: {}.", result.size());
 
     return result;
   }
@@ -155,11 +154,11 @@ public class DeviceService {
    * @return the developer all report
    */
   public List<HashMap> getTotalReport(String developerId) {
-    logger.debug("Enter. developerId: {}.", developerId);
+    LOGGER.debug("Enter. developerId: {}.", developerId);
 
     List<HashMap> result = deviceRepository.getReport(developerId);
 
-    logger.debug("Exit. result size: {}.", result.size());
+    LOGGER.debug("Exit. result size: {}.", result.size());
 
     return result;
   }
@@ -172,11 +171,11 @@ public class DeviceService {
    * @return the registered report
    */
   public List<HashMap> getIncreaseReport(long startTime, long endTime) {
-    logger.debug("Enter.");
+    LOGGER.debug("Enter.");
 
     List<HashMap> result = deviceRepository.getIncreaseReport(startTime, endTime);
 
-    logger.debug("Exit. result size: {}.", result.size());
+    LOGGER.debug("Exit. result size: {}.", result.size());
 
     return result;
   }
@@ -190,11 +189,11 @@ public class DeviceService {
    * @return the developer registered report
    */
   public List<HashMap> getIncreaseReport(String developerId, long startTime) {
-    logger.debug("Enter. developerId: {}, startTime: {}.", developerId, startTime);
+    LOGGER.debug("Enter. developerId: {}, startTime: {}.", developerId, startTime);
 
     List<HashMap> result = deviceRepository.getDeveloperRegisterReport(developerId, startTime);
 
-    logger.debug("Exit. result size: {}.", result.size());
+    LOGGER.debug("Exit. result size: {}.", result.size());
 
     return result;
   }
@@ -206,7 +205,7 @@ public class DeviceService {
    * @return
    */
   public boolean isDeviceBound(String unionId) {
-    logger.debug("Enter. unionId: {}.", unionId);
+    LOGGER.debug("Enter. unionId: {}.", unionId);
 
     Device sample = new Device();
     sample.setUnionId(unionId);
@@ -216,7 +215,7 @@ public class DeviceService {
 
     boolean result = deviceRepository.exists(example);
 
-    logger.debug("Exit. isDeviceBound? {}", result);
+    LOGGER.debug("Exit. isDeviceBound? {}", result);
 
     return result;
   }
@@ -229,7 +228,7 @@ public class DeviceService {
    * @return
    */
   public Device findByUserAndUnionId(String userId, String unionId) {
-    logger.debug("Enter. userId: {}, unionId: {}.", userId, unionId);
+    LOGGER.debug("Enter. userId: {}, unionId: {}.", userId, unionId);
 
     Device sample = new Device();
     sample.setUnionId(unionId);
@@ -239,13 +238,20 @@ public class DeviceService {
 
     Device result = deviceRepository.findOne(example);
 
-    logger.debug("Exit. device: {}.", result);
+    LOGGER.debug("Exit. device: {}.", result);
 
     return result;
   }
 
+  /**
+   * Find by user and device id.
+   *
+   * @param userId
+   * @param deviceId
+   * @return
+   */
   public Device findByUserAndDeviceId(String userId, String deviceId) {
-    logger.debug("Enter. userId: {}, deviceId: {}.", userId, deviceId);
+    LOGGER.debug("Enter. userId: {}, deviceId: {}.", userId, deviceId);
 
     Device sample = new Device();
     sample.setDeviceId(deviceId);
@@ -255,30 +261,41 @@ public class DeviceService {
 
     Device result = deviceRepository.findOne(example);
 
-    logger.debug("Exit. device: {}.", result);
+    LOGGER.debug("Exit. device: {}.", result);
 
     return result;
   }
 
+  /**
+   * Get by developer id.
+   *
+   * @param developerId
+   * @return
+   */
   public List<Device> getByDeveloper(String developerId) {
-    logger.debug("Enter. developerId: {}.", developerId);
+    LOGGER.debug("Enter. developerId: {}.", developerId);
     Device sample = new Device();
     sample.setDeveloperId(developerId);
 
     Example<Device> example = Example.of(sample);
     List<Device> devices = deviceRepository.findAll(example);
 
-    logger.debug("Exit. device size: {}.", devices.size());
+    LOGGER.debug("Exit. device size: {}.", devices.size());
 
     return devices;
   }
 
+  /**
+   * Count device.
+   *
+   * @return
+   */
   public Long countDevices() {
-    logger.info("Enter.");
+    LOGGER.info("Enter.");
 
     Long count = deviceRepository.count();
 
-    logger.debug("Exit. device count: {}.", count);
+    LOGGER.debug("Exit. device count: {}.", count);
 
     return count;
   }

@@ -1,7 +1,6 @@
 package com.umasuo.device.center.domain.model;
 
 import com.umasuo.device.center.infrastructure.enums.DeviceStatus;
-
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,7 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 /**
- * Created by umasuo on 17/6/3.
+ * Device.
  */
 @Entity
 @Table(name = "device")
@@ -25,6 +24,9 @@ import javax.persistence.Version;
 @EntityListeners(AuditingEntityListener.class)
 public class Device {
 
+  /**
+   * Device id.
+   */
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -71,7 +73,13 @@ public class Device {
    */
   private String ownerId;
 
+  /**
+   * Public key.
+   */
   private String publicKey;
 
+  /**
+   * Device status.
+   */
   private DeviceStatus status;
 }

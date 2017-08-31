@@ -5,13 +5,19 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * Created by umasuo on 17/7/4.
+ * Union Device view.
  */
 @Data
-public class UnionDeviceView implements Serializable{
+public class UnionDeviceView implements Serializable {
 
+  /**
+   * Auto generated serial version id.
+   */
   private static final long serialVersionUID = 2183117062182600998L;
 
+  /**
+   * union id.
+   */
   private String unionId;
 
   /**

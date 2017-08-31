@@ -4,7 +4,6 @@ import com.umasuo.device.center.application.dto.DeviceData;
 import com.umasuo.device.center.application.service.DeviceApplication;
 import com.umasuo.device.center.infrastructure.Router;
 import com.umasuo.device.center.infrastructure.enums.DeviceStatus;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * Created by Davis on 17/7/14.
+ * Device Data controller.
  */
 @CrossOrigin
 @RestController
@@ -26,26 +25,41 @@ public class DeviceDataController {
   /**
    * Logger.
    */
-  private static final Logger logger = LoggerFactory.getLogger(DeviceDataController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(DeviceDataController.class);
 
+  /**
+   * Device app.
+   */
   @Autowired
   private transient DeviceApplication deviceApplication;
 
-  // TODO: 17/7/13 查询参数， 分页，排序
+
+  /**
+   * Get device data.
+   *
+   * @param developerId
+   * @param productId
+   * @param status
+   * @param phone
+   * @param unionId
+   * @param deviceId
+   * @return
+   */
   @GetMapping(value = Router.DEVICE_DATA)
   public List<DeviceData> getDeviceData(@RequestHeader String developerId,
-      @RequestParam(required = false) String productId,
-      @RequestParam(required = false) DeviceStatus status,
-      @RequestParam(required = false) String phone,
-      @RequestParam(required = false) String unionId,
-      @RequestParam(required = false) String deviceId) {
-    logger.info(
-        "Enter. developerId: {}, productId: {}, status: {}, phone: {}, unionId: {}, deviceId: {}.",
-        developerId, productId, status, phone, unionId, deviceId);
+                                        @RequestParam(required = false) String productId,
+                                        @RequestParam(required = false) DeviceStatus status,
+                                        @RequestParam(required = false) String phone,
+                                        @RequestParam(required = false) String unionId,
+                                        @RequestParam(required = false) String deviceId) {
+    // TODO: 17/7/13 查询参数， 分页，排序
+    LOGGER.info(
+      "Enter. developerId: {}, productId: {}, status: {}, phone: {}, unionId: {}, deviceId: {}.",
+      developerId, productId, status, phone, unionId, deviceId);
 
     List<DeviceData> deviceData = deviceApplication.getDeviceData(developerId);
 
-    logger.info("Exit. deviceData size: {}.", deviceData.size());
+    LOGGER.info("Exit. deviceData size: {}.", deviceData.size());
 
     return deviceData;
   }

@@ -1,16 +1,8 @@
 package com.umasuo.device.center.domain.service;
 
-import com.google.common.collect.Lists;
-import com.umasuo.device.center.application.dto.UnionDeviceRequest;
-import com.umasuo.device.center.application.dto.UnionDeviceView;
-import com.umasuo.device.center.application.dto.UnionRegisterRequest;
-import com.umasuo.device.center.application.dto.mapper.UnionMapper;
 import com.umasuo.device.center.domain.model.UnionDevice;
 import com.umasuo.device.center.infrastructure.repository.UnionDeviceRepository;
-
-import com.umasuo.exception.AlreadyExistException;
 import com.umasuo.exception.NotExistException;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +10,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
- * Created by Davis on 17/6/27.
+ * Union Device service.
  */
 @Service
 public class UnionDeviceService {
@@ -29,8 +20,11 @@ public class UnionDeviceService {
   /**
    * Logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(UnionDeviceService.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(UnionDeviceService.class);
 
+  /**
+   * Union device repository.
+   */
   @Autowired
   private transient UnionDeviceRepository repository;
 
@@ -42,20 +36,26 @@ public class UnionDeviceService {
    */
   @Async
   public void save(List<UnionDevice> unionDevices) {
-    LOG.debug("Enter. unionDevice size.", unionDevices.size());
+    LOGGER.debug("Enter. unionDevice size.", unionDevices.size());
 
     repository.save(unionDevices);
 
-    LOG.debug("Exit.");
+    LOGGER.debug("Exit.");
   }
 
+  /**
+   * Save union device.
+   *
+   * @param unionDevice
+   * @return
+   */
   @Async
   public UnionDevice save(UnionDevice unionDevice) {
-    LOG.debug("Enter. unionDevice: {}.", unionDevice);
+    LOGGER.debug("Enter. unionDevice: {}.", unionDevice);
 
     UnionDevice savedUnionDevice = repository.save(unionDevice);
 
-    LOG.debug("Exit.");
+    LOGGER.debug("Exit.");
 
     return savedUnionDevice;
   }
@@ -67,24 +67,30 @@ public class UnionDeviceService {
    * @return
    */
   public boolean isUnionIdExist(String unionId) {
-    LOG.debug("Enter. unionId: {}.", unionId);
+    LOGGER.debug("Enter. unionId: {}.", unionId);
 
     boolean result = repository.exists(unionId);
 
-    LOG.debug("Exit. unionId exist? {}", result);
+    LOGGER.debug("Exit. unionId exist? {}", result);
 
     return result;
   }
 
+  /**
+   * Find one union device.
+   *
+   * @param unionId
+   * @return
+   */
   public UnionDevice findOne(String unionId) {
-    LOG.debug("Enter. unionId: {}.", unionId);
+    LOGGER.debug("Enter. unionId: {}.", unionId);
 
     UnionDevice unionDevice = repository.findOne(unionId);
     if (unionDevice == null) {
-      LOG.debug("Device: {} does not exist.", unionDevice);
+      LOGGER.debug("Device: {} does not exist.", unionId);
       throw new NotExistException("Device not exist");
     }
-    LOG.debug("Exit. unionDevice: {}.", unionDevice);
+    LOGGER.debug("Exit. unionDevice: {}.", unionDevice);
 
     return unionDevice;
   }
