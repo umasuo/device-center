@@ -122,12 +122,12 @@ public class UnionApplication {
   private void checkProduct(String developerId, String productId) {
     ProductView product = restClient.getProduct(developerId, productId);
 
-    if (developerId.equals(product.getDeveloperId())) {
+    if (! developerId.equals(product.getDeveloperId())) {
       LOGGER.debug("Developer: {} don't own this product: {}.", developerId, productId);
       throw new AuthFailedException("Developer do not own this product");
     }
 
-    if (!ProductStatus.PUBLISHED.equals(product.getStatus())) {
+    if (! ProductStatus.PUBLISHED.equals(product.getStatus())) {
       LOGGER.debug("Product: {} is not published.", productId);
       throw new CreateResourceFailed("Product is not published");
     }
