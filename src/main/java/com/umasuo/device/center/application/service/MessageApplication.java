@@ -127,10 +127,15 @@ public class MessageApplication implements CommandLineRunner {
    */
   public void publish(String deviceId, String userId, DeviceMessage message) {
     LOGGER.debug("Enter. deviceId: {}, userId: {}, message: {}.", deviceId, userId, message);
+
+    // TODO: 17/9/21 check functionId, dataId and data
+
     //组织每个用户的App只订阅自己的那一个topic,对topic内容的解析交给程序自己
     String topic = DEVICE_TOPIC_SUB_PREFIX + deviceId;
     String msg = JsonUtils.serialize(message);
     publish(topic, msg.getBytes(StandardCharsets.UTF_8), QoS.AT_LEAST_ONCE, false);
+
+    LOGGER.debug("Exit.");
   }
 
   /**

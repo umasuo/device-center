@@ -16,7 +16,7 @@ public class DeviceMessage implements Serializable {
   private static final long serialVersionUID = 9190245794314412899L;
 
   /**
-   * Message tyoe.
+   * Message type.
    */
   private int type;
 

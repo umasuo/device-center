@@ -3,6 +3,8 @@ package com.umasuo.device.center.application.service;
 import com.umasuo.device.center.application.dto.DeviceActivateResult;
 import com.umasuo.device.center.application.dto.DeviceData;
 import com.umasuo.device.center.application.dto.DeviceDraft;
+import com.umasuo.device.center.application.dto.DeviceMessage;
+import com.umasuo.device.center.application.dto.DeviceMessage.Content;
 import com.umasuo.device.center.application.dto.DeviceView;
 import com.umasuo.device.center.application.dto.mapper.DeviceDataMapper;
 import com.umasuo.device.center.application.dto.mapper.DeviceMapper;
@@ -14,6 +16,7 @@ import com.umasuo.device.center.infrastructure.enums.DeviceStatus;
 import com.umasuo.device.center.infrastructure.exception.AlreadyBoundException;
 import com.umasuo.exception.NotExistException;
 import com.umasuo.exception.ParametersException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,10 +72,9 @@ public class DeviceApplication {
     UnionDevice unionDevice = unionDeviceService.findOne(draft.getUnionId());
     if (!unionDevice.getProductId().equals(draft.getProductId())) {
       LOGGER.debug("Device: {} not belong to the kind of product: {}.", draft.getUnionId(), draft
-        .getProductId());
+          .getProductId());
       throw new NotExistException("Device not belong to the product.");
     }
-
 
     // 1. 根据unionId查询设备是否处于绑定状态
     if (deviceService.isDeviceBound(draft.getUnionId())) {
@@ -111,7 +113,7 @@ public class DeviceApplication {
   /**
    * 接触设备与用户的绑定关系。
    *
-   * @param userId   the user id
+   * @param userId the user id
    * @param deviceId the device id
    */
   public void unbind(String userId, String deviceId) {
@@ -127,7 +129,7 @@ public class DeviceApplication {
     device.setStatus(DeviceStatus.UNBIND);
     deviceService.save(device);
 
-    // TODO: 17/6/28 给设备发送信息，清空设备上保存的用户信息
+    sendUnbindMessage(userId, deviceId);
 
     sessionApplication.clearSession(device.getDeveloperId(), device.getDeviceId());
 
@@ -137,9 +139,9 @@ public class DeviceApplication {
   /**
    * get one device by device id.
    *
-   * @param deviceId    String
+   * @param deviceId String
    * @param developerId the developer id
-   * @param userId      the user id
+   * @param userId the user id
    * @return DeviceView by device id
    */
   public DeviceView getByDeviceId(String deviceId, String developerId, String userId) {
@@ -150,14 +152,14 @@ public class DeviceApplication {
     if (!device.getDeveloperId().equals(developerId)) {
       LOGGER.debug("Device: {} is not belong to developer: {}.", deviceId, developerId);
       throw new ParametersException("The device not belong to the developer: " + developerId + "," +
-        " deviceId: " + deviceId);
+          " deviceId: " + deviceId);
     }
 
     if (StringUtils.isNotBlank(userId) &&
-      !userId.equals(device.getOwnerId())) {
+        !userId.equals(device.getOwnerId())) {
       LOGGER.debug("Device: {} is not belong to user: {}.", deviceId, userId);
       throw new ParametersException("The device not belong to the user: " + userId + "," +
-        " deviceId: " + deviceId);
+          " deviceId: " + deviceId);
     }
 
     DeviceView view = DeviceMapper.toView(device);
@@ -169,7 +171,7 @@ public class DeviceApplication {
   /**
    * 获取一个用户在某个开发者下的所有设备。
    *
-   * @param userId      the user id
+   * @param userId the user id
    * @param developerId the developer id
    * @return 设备列表 by user and developer
    */
@@ -187,20 +189,20 @@ public class DeviceApplication {
   /**
    * Gets by user and definition.
    *
-   * @param userId             the user id
-   * @param developerId        the developer id
+   * @param userId the user id
+   * @param developerId the developer id
    * @param deviceDefinitionId the device definition id
    * @return the by user and definition
    */
   public DeviceView getByUserAndDefinition(String userId, String developerId,
-                                           String deviceDefinitionId) {
+      String deviceDefinitionId) {
     LOGGER.debug("Enter. userId: {}, developerId: {}, deviceDefinitionId: {}.", userId, developerId,
-      deviceDefinitionId);
+        deviceDefinitionId);
 
     Device device = deviceService.getByUserAndDefinition(userId, developerId, deviceDefinitionId);
     if (device == null) {
       LOGGER.debug("Can not find device by user: {}, developer: {}, deviceDefinition: {}.",
-        userId, developerId, deviceDefinitionId);
+          userId, developerId, deviceDefinitionId);
       throw new NotExistException("Device not find");
     }
     DeviceView result = DeviceMapper.toView(device);
@@ -212,9 +214,6 @@ public class DeviceApplication {
 
   /**
    * 获取设备的运营数据。
-   *
-   * @param developerId
-   * @return
    */
   public List<DeviceData> getDeviceData(String developerId) {
     LOGGER.debug("Enter. developerId: {}.", developerId);
@@ -231,8 +230,6 @@ public class DeviceApplication {
 
   /**
    * Count devices.
-   *
-   * @return
    */
   public Long countDevices() {
     LOGGER.debug("Enter.");
@@ -242,5 +239,28 @@ public class DeviceApplication {
     LOGGER.debug("Exit. device count: {}.", count);
 
     return count;
+  }
+
+  /**
+   * 给设备发送信息，清空设备上保存的用户信息
+   *
+   * @param userId the user id
+   * @param deviceId the device id
+   */
+  private void sendUnbindMessage(String userId, String deviceId) {
+
+    DeviceMessage message = new DeviceMessage();
+
+    message.setType(0);
+    message.setT(System.currentTimeMillis());
+    message.setDeviceId(deviceId);
+
+    Content content = new Content();
+    content.setId("unbind");
+    content.setData("unbind");
+
+    message.setContent(content);
+
+    messageApplication.publish(deviceId, userId, message);
   }
 }
