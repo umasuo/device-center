@@ -126,12 +126,14 @@ public class DeviceApplication {
       throw new NotExistException("Can not find device");
     }
 
-    device.setStatus(DeviceStatus.UNBIND);
-    deviceService.save(device);
+    if (DeviceStatus.BIND.equals(device.getStatus())) {
+      device.setStatus(DeviceStatus.UNBIND);
+      deviceService.save(device);
 
-    sendUnbindMessage(userId, deviceId);
+      sendUnbindMessage(userId, deviceId);
 
-    sessionApplication.clearSession(device.getDeveloperId(), device.getDeviceId());
+      sessionApplication.clearSession(device.getDeveloperId(), device.getDeviceId());
+    }
 
     LOGGER.debug("Exit.");
   }
